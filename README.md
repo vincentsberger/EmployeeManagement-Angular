@@ -84,7 +84,7 @@ URL, über der der Service zu erreichen ist: https://keycloak.szut.dev/auth,
 der Realm hat die Bezeichnung: szut,
 die ClientId deines Angular Frontends lautet: employee-management-service-frontend
 
-Hier ein Beispiel einer app.config.ts mit der Konfiguration für Keycloak. Mit dem KeycloakService, der hier definiert wird, kannst du z.B. feststellen, ob der Benutzer eingeloggt ist oder nicht oder ihn mit keycloakService.login() zum Login weiterleiten.
+Hier ein Beispiel einer app.config.ts mit der Konfiguration für Keycloak. Mit dem KeycloakService, der hier definiert wird, kannst du in einem AuthGuard z.B. feststellen, ob der Benutzer eingeloggt ist oder nicht oder ihn mit keycloakService.login() zum Login weiterleiten.
 
 ```typescript
 import {APP_INITIALIZER, ApplicationConfig} from '@angular/core';
