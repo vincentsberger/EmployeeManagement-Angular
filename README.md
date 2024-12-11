@@ -6,13 +6,6 @@
 * Docker https://docs.docker.com/get-docker/
 * Docker compose (bei Windows und Mac schon in Docker enthalten) https://docs.docker.com/compose/install/
 
-### Terminal öffnen
-
-für alles gilt, im Terminal im Ordner docker sein
-
-```bash
-cd docker
-```
 
 ### Abhängigkeiten starten (Postgres, EmployeeBackend)
 
