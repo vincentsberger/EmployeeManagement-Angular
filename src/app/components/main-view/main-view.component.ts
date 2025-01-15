@@ -2,8 +2,6 @@ import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterOutlet, RouterLink  } from "@angular/router";
 
-import {} from "@ng-icons/material-icons";
-
 @Component({
   selector: 'app-main-view',
   standalone: true,
