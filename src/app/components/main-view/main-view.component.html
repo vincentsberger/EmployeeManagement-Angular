@@ -1,0 +1,20 @@
+<div class="container my-3">
+  <nav class="d-flex flex-row justify-content-between">
+    <div>LOGO mogo</div>
+    <ul class="nav justify-content-center align-items-center">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/">Home</a>
+      </li>
+      <li>
+        <a class="nav-link" routerLink="/employees">Mitarbeiter</a>
+      </li>
+      <li>
+        <a class="nav-link" routerLink="/qualifications">Qualifikationen</a>
+      </li>
+    </ul>
+    <button class="btn btn-primary">Logout</button>
+  </nav>
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>
