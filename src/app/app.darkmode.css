@@ -1,0 +1,54 @@
+.background {
+  background-color: #1E1E1E;
+}
+
+body {
+  color: #FFFFFF;
+  font-family: Roboto sans-serif;
+}
+
+.button-white {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: #FFFFFF;
+  background-color: #1D1B20;
+}
+
+.button-black {
+  border-radius: 16px;
+  background: #1E1E1E;
+}
+
+.button-red {
+  background-color: #1D1B20;
+  color: #852221;
+}
+
+.link {
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-decoration-skip-ink: auto;
+  text-decoration-thickness: auto;
+  text-underline-offset: auto;
+}
+
+.floating-action-button {
+  display: flex;
+  padding: 16px;
+  justify-content: center;
+  align-items: center;
+  color: #000000;
+}
+
+.imputfield {
+  display: flex;
+  padding: 4px;
+  align-items: center;
+  gap: 4px;
+  flex: 1 0 0;
+  align-self: stretch;
+  background-color: #49454F;
+}
+
+
