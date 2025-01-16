@@ -18,11 +18,12 @@
         </li>
       </ul>
       <button
-        class="btn btn-primary h-50 d-flex flex-row gap-3 justify-content-center align-items-center"
+        class="btn btn-primary h-50 d-flex flex-row gap-1 justify-content-center align-items-center"
       >
         <mat-icon>logout</mat-icon>
         <span>Logout</span>
       </button>
+      <mat-slide-toggle (click)="toggleDarkMode()">Darkmode</mat-slide-toggle>
     </nav>
   </header>
   <main class="container-fluid">
