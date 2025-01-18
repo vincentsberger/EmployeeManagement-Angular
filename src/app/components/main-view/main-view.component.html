@@ -1,7 +1,7 @@
 <div>
   <header class="container-fluid py-3 shadow mb-5">
     <nav
-      class=" container px-3 d-flex flex-row justify-content-between align-items-center "
+      class="container px-3 d-flex flex-row justify-content-between align-items-center"
     >
       <div>
         <img src="/img/logo.jpg" width="150" />
@@ -17,16 +17,22 @@
           <a class="nav-link" routerLink="/qualifications">Qualifikationen</a>
         </li>
       </ul>
-      <button
-        class="btn btn-primary h-50 d-flex flex-row gap-1 justify-content-center align-items-center"
-      >
-        <mat-icon>logout</mat-icon>
-        <span>Logout</span>
-      </button>
-      <div class="d-flex align-items-center justify-content-center gap-1">
-        <mat-icon>light_mode</mat-icon>
-        <mat-slide-toggle hideIcon="true" [checked]="isDarkMode"  (click)="toggleDarkMode()"></mat-slide-toggle>
-        <mat-icon>dark_mode</mat-icon>
+      <div class="d-flex flex-row gap-3">
+        <button
+          class="btn btn-primary h-50 d-flex flex-row gap-1 justify-content-center align-items-center"
+        >
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+        <div class="d-flex align-items-center justify-content-center gap-1">
+          <mat-icon>light_mode</mat-icon>
+          <mat-slide-toggle
+            hideIcon="true"
+            [checked]="isDarkMode"
+            (click)="toggleDarkMode()"
+          ></mat-slide-toggle>
+          <mat-icon>dark_mode</mat-icon>
+        </div>
       </div>
     </nav>
   </header>

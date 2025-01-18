@@ -11,7 +11,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
   standalone: true,
 })
 export class MainViewComponent {
-  isDarkMode: boolean = false;
+  isDarkMode: boolean = true;
 
   toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
