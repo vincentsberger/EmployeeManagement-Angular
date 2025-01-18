@@ -15,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
         RouterLink,
     ],
     templateUrl: './app.component.html',
-    styleUrl: './app.component.css',
+    styleUrl: './app.component.scss',
     standalone: true,
 })
 export class AppComponent {

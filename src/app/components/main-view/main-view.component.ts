@@ -7,7 +7,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
   selector: 'app-main-view',
   imports: [RouterOutlet, RouterLink, MatIconModule, MatSlideToggleModule],
   templateUrl: './main-view.component.html',
-  styleUrl: './main-view.component.css',
+  styleUrl: './main-view.component.scss',
   standalone: true,
 })
 export class MainViewComponent {
@@ -19,7 +19,6 @@ export class MainViewComponent {
       document.documentElement.setAttribute('data-bs-theme', 'dark');
     } else {
       document.documentElement.setAttribute('data-bs-theme', 'light');
-      console.log(document.documentElement);
     }
   }
 }

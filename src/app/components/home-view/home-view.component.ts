@@ -6,7 +6,7 @@ import { MatGridListModule } from "@angular/material/grid-list";
     selector: 'app-home-view',
     imports: [MatIconModule, MatGridListModule],
     templateUrl: './home-view.component.html',
-    styleUrl: './home-view.component.css',
+    styleUrl: './home-view.component.scss',
     standalone: true
 })
 export class HomeViewComponent {
