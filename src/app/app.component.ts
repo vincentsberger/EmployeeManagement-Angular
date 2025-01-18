@@ -15,7 +15,8 @@ import { MatIconModule } from '@angular/material/icon';
         RouterLink,
     ],
     templateUrl: './app.component.html',
-    styleUrl: './app.component.css'
+    styleUrl: './app.component.css',
+    standalone: true,
 })
 export class AppComponent {
   title = 'EmployeeManagementService';

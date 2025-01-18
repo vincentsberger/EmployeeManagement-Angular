@@ -23,7 +23,11 @@
         <mat-icon>logout</mat-icon>
         <span>Logout</span>
       </button>
-      <mat-slide-toggle (click)="toggleDarkMode()">Darkmode</mat-slide-toggle>
+      <div class="d-flex align-items-center justify-content-center gap-1">
+        <mat-icon>light_mode</mat-icon>
+        <mat-slide-toggle hideIcon="true" [checked]="isDarkMode"  (click)="toggleDarkMode()"></mat-slide-toggle>
+        <mat-icon>dark_mode</mat-icon>
+      </div>
     </nav>
   </header>
   <main class="container-fluid">
