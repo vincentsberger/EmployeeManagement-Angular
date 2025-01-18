@@ -4,11 +4,10 @@ import { RouterOutlet, RouterLink } from '@angular/router';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
-  selector: 'app-main-view',
-  standalone: true,
-  imports: [RouterOutlet, RouterLink, MatIconModule, MatSlideToggleModule],
-  templateUrl: './main-view.component.html',
-  styleUrl: './main-view.component.css',
+    selector: 'app-main-view',
+    imports: [RouterOutlet, RouterLink, MatIconModule, MatSlideToggleModule],
+    templateUrl: './main-view.component.html',
+    styleUrl: './main-view.component.css'
 })
 export class MainViewComponent {
   isDarkMode: boolean = false;
