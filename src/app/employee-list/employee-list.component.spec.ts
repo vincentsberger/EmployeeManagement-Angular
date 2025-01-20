@@ -1,23 +1,25 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {KeycloakService} from 'keycloak-angular';
+import {Employee} from '../Employee';
 
-import { EmployeeListComponent } from './employee-list.component';
+@Component({
+    selector: 'app-employee-list',
+    standalone: true,
+    imports: [CommonModule],
+    templateUrl: './employee-list.component.html',
+    styleUrls: ['./employee-list.component.css'],
+})
+export class EmployeeListComponent {
+    employees$: Observable<Employee[]>;
 
-describe('EmployeeListComponent', () => {
-  let component: EmployeeListComponent;
-  let fixture: ComponentFixture<EmployeeListComponent>;
+    constructor(private http: HttpClient, private keycloakService: KeycloakService) {
+        this.employees$ = this.fetchData();
+    }
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [EmployeeListComponent]
-    })
-    .compileComponents();
-    
-    fixture = TestBed.createComponent(EmployeeListComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    fetchData(): Observable<Employee[]> {
+        return this.http.get<Employee[]>('http://localhost:8089/employees');
+    }
+}

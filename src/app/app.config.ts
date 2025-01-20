@@ -1,7 +1,7 @@
 import {APP_INITIALIZER, ApplicationConfig} from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {provideRouter} from '@angular/router';
 
-import { routes } from './app.routes';
+import {routes} from './app.routes';
 import {KeycloakAngularModule, KeycloakBearerInterceptor, KeycloakService} from "keycloak-angular";
 import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
 
@@ -16,9 +16,8 @@ export const initializeKeycloak = (keycloak: KeycloakService) => async () =>
     initOptions: {
       onLoad: 'check-sso',
       silentCheckSsoRedirectUri:
-        window.location.origin + '/silent-check-sso.html',
-      checkLoginIframe: false,
-      redirectUri: 'http://localhost:4200',
+        window.location.origin + '/assets/silent-check-sso.html',
+      redirectUri: 'http://localhost:4200/',
     },
   });
 

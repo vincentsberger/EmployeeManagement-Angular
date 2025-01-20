@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
-import { RouterOutlet, RouterLink  } from "@angular/router";
+import {Component} from '@angular/core';
+import {MatIconModule} from '@angular/material/icon';
+import {RouterOutlet, RouterLink} from "@angular/router";
 
 import {} from "@ng-icons/material-icons";
+import {KeycloakService} from "keycloak-angular";
 
 @Component({
   selector: 'app-main-view',
@@ -12,5 +13,10 @@ import {} from "@ng-icons/material-icons";
   styleUrl: './main-view.component.css'
 })
 export class MainViewComponent {
+  constructor(private keycloakService: KeycloakService) {
+  }
 
+  async logout() {
+    await this.keycloakService.logout('http://localhost:4200');
+  }
 }
