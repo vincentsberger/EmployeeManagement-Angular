@@ -1,5 +1,6 @@
-<h1>Qualification</h1>
-<div class="container">
+<app-main-view>
+  <div class="container">
+  <h1>Qualification</h1>
   <div class="list-group">
     <div
       *ngFor="let qualification of qualifications$ | async; let last = last"
@@ -28,8 +29,8 @@
   >
     Neue Qualification
   </button>
-</div>
-
+  </div>
+</app-main-view>
 
 <link
   rel="stylesheet"
