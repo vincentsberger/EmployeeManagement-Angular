@@ -2,8 +2,6 @@ import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatGridListModule } from "@angular/material/grid-list";
 import { MainViewComponent } from "../main-view/main-view.component";
-import { RouterLink } from '@angular/router';
-import { fadeAnimation } from '../../animation';
 
 @Component({
     selector: 'app-home-view',
