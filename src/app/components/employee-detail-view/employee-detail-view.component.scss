@@ -1,0 +1,46 @@
+.skill-box {
+  border: 2px solid gray;
+  border-radius: 8px;
+  padding: 8px;
+  min-width: 60px;
+  max-height: 30px;
+  background-color: transparent;
+  color: var(--text-color-light);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+html.darkmode .list-group-item {
+  background-color: var(--background-color-dark);
+  color: var(--text-color-dark);
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 15px;
+  padding-left: 10px;
+}
+
+.list-group-item strong {
+  color: var(--text-color-light);
+  flex-shrink: 0;
+}
+
+.list-group-item .d-flex {
+  display: flex;
+  justify-content: end;
+  flex-grow: 1;
+}
+
+.list-group-item .d-flex.flex-wrap {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}

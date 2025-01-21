@@ -1,0 +1,47 @@
+<app-main-view>
+    <div class="container">
+        <h1>Mitarbeiter Details</h1>
+
+        <div *ngIf="employee$ | async as employee; else loading">
+            <div class="list-group">
+                <div class="list-group-item">
+                    <strong>Vorname:</strong> {{ employee.firstName }}
+                </div>
+                <div class="list-group-item">
+                    <strong>Nachname:</strong> {{ employee.lastName }}
+                </div>
+                <div class="list-group-item">
+                    <strong>Straße:</strong> {{ employee.street }}
+                </div>
+                <div class="list-group-item">
+                    <strong>Postleitzahl:</strong> {{ employee.postcode }}
+                </div>
+                <div class="list-group-item">
+                    <strong>Stadt:</strong> {{ employee.city }}
+                </div>
+                <div class="list-group-item">
+                    <strong>Telefonnummer:</strong> {{ employee.phone }}
+                </div>
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <strong>Qualifikation:</strong>
+                        <div class="d-flex flex-wrap">
+                            <div
+                                    *ngFor="let skill of qualifications$ | async"
+                                    class="skill-box text-center me-2 mb-2"
+                            >
+                                {{ skill.skill }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-secondary mt-3" routerLink="/employees">Zurück zur Liste</button>
+        </div>
+
+        <ng-template #loading>
+            <p>Lade Mitarbeiterdaten...</p>
+        </ng-template>
+    </div>
+</app-main-view>
