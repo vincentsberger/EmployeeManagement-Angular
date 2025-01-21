@@ -19,7 +19,8 @@
       </ul>
       <div class="d-flex flex-row gap-3">
         <button
-          class="btn btn-primary h-50 d-flex flex-row gap-1 justify-content-center align-items-center"
+          (click)="logout()"
+          class="btn btn-danger h-50 d-flex flex-row gap-1 justify-content-center align-items-center"
         >
           <mat-icon>logout</mat-icon>
           <span>Logout</span>
@@ -37,6 +38,6 @@
     </nav>
   </header>
   <main class="container-fluid">
-    <router-outlet></router-outlet>
+    <ng-content></ng-content>
   </main>
 </div>

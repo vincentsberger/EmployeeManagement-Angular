@@ -1,17 +1,27 @@
-import { Component } from '@angular/core';
+import Keycloak from 'keycloak-js';
+import { Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-main-view',
-  imports: [RouterOutlet, RouterLink, MatIconModule, MatSlideToggleModule],
+  imports: [RouterLink, MatIconModule, MatSlideToggleModule],
   templateUrl: './main-view.component.html',
   styleUrl: './main-view.component.scss',
   standalone: true,
 })
 export class MainViewComponent {
   isDarkMode: boolean = true;
+  isLoading: boolean = true;
+
+  private keycloak = inject(Keycloak);
+
+  logout() {
+    this.keycloak.logout({
+      redirectUri: window.location.origin + '/',
+    });
+  }
 
   toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;

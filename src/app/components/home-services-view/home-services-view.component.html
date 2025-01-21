@@ -1,0 +1,35 @@
+<div class="container main_container d-flex">
+  <div class="loading-state flex-column gap-3" *ngIf="isLoading == true">
+    <div class="loading"></div>
+    <h2>Sie sind nicht angemeldet und werden zum Login weitergeleitet...</h2>
+  </div>
+  <div class="row justify-content-center align-items-center">
+    <div class="col col-4">
+      <mat-card class="example-card" appearance="outlined">
+        <mat-card-header>
+          <mat-card-title class="mb-3"
+            >EmployeeManagementService</mat-card-title
+          >
+        </mat-card-header>
+        <!-- <img
+          mat-card-image
+          src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+          alt="Photo of a Shiba Inu"
+        /> -->
+        <mat-card-content>
+          <p>
+            The Shiba Inu is the smallest of the six original and distinct spitz
+            breeds of dog from Japan. A small, agile dog that copes very well
+            with mountainous terrain, the Shiba Inu was originally bred for
+            hunting.
+          </p>
+        </mat-card-content>
+        <mat-card-actions
+          class="d-flex justify-content-center align-items-center"
+        >
+          <a mat-flat-button (click)="startEMS()">Zum EMS</a>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>
