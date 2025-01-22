@@ -1,47 +1,43 @@
 <app-main-view></app-main-view>
 <section>
-  <body>
-
   <h1 class="container">Mitarbeiter anlegen</h1>
+
   <div class="container">
 
-    <form class="form">
+    <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+      <div class="inputfield">
+        <label for="firstName">Vorname</label>
+        <input class="form-control rounded-pill mb-2" id="firstName" formControlName="firstName" type="text">
+
+        <label for="lastName">Nachname</label>
+        <input class="form-control rounded-pill mb-2" id="lastName" formControlName="lastName" type="text">
+
+        <label for="phone">Telefonnummer</label>
+        <input class="form-control rounded-pill mb-2" id="phone" formControlName="phone" type="text">
+      </div>
+
+      <div>
         <div class="inputfield">
-          <label for="firstname">Vorname</label>
-          <input class="form-control rounded-pill mb-2" id="firstname" name="firstname" type="text">
+          <label for="street">Straße und Hausnummer</label>
+          <input class="form-control rounded-pill mb-2" id="street" formControlName="street" type="text">
 
-          <label for="surname">Nachname</label>
-          <input class="form-control rounded-pill mb-2" id="surname" name="surname" type="text">
+          <label for="city">Stadt</label>
+          <input class="form-control rounded-pill mb-2" id="city" formControlName="city" type="text">
 
-          <label for="phonenumber">Telefonnummer</label>
-          <input class="form-control rounded-pill mb-2" id="phonenumber" name="phonenumber" type="text">
+          <label for="postcode">Postleitzahl</label>
+          <input class="form-control rounded-pill mb-2" id="postcode" formControlName="postcode" type="text">
+
         </div>
+      </div>
 
-        <div>
-          <div class="inputfield">
-            <label for="street">Straße</label>
-            <input class="form-control rounded-pill mb-2" id="street" name="street" type="text">
+      <div class="container">
+        <input type="text" id="skillSet" name="skillSet" placeholder="Skill Placeholder" formControlName="skillSet">
+      </div>
 
-            <label for="postcode">Postleitzahl</label>
-            <input class="form-control rounded-pill mb-2" id="postcode" name="postcode" type="text">
-
-            <label for="housenumber">Hausnummer</label>
-            <input class="form-control rounded-pill mb-2" id="housenumber" name="housenumber" type="text">
-          </div>
-        </div>
+      <div class="container mt-3">
+        <button class="btn text-primary btn-outline-secondary me-4" type="submit">Save</button>
+        <button class="btn text-danger btn-outline-secondary me-2" type="button" routerLink="/employees">Cancel</button>
+      </div>
     </form>
   </div>
-
-  <div class="container">
-    <h4 class="container">Skillz</h4>
-    <input type="checkbox">
-
-  </div>
-
-  <div class="container mt-3">
-    <button class="btn text-primary btn-outline-secondary me-4" type="submit">Save</button>
-    <button class="btn text-danger btn-outline-secondary me-2" type="button">Cancel</button>
-  </div>
-
-  </body>
 </section>
