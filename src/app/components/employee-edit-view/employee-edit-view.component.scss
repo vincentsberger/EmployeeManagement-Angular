@@ -1,0 +1,58 @@
+.edit-employee-container {
+  max-width: 600px;
+  margin: 40px auto;
+  
+  h2 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #444;
+  }
+
+  .list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+
+    .bi-trash {
+      cursor: pointer;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: #ff0000;
+      }
+    }
+  }
+
+  .input-group {
+    display: flex;
+
+    input {
+      flex-grow: 1;
+      height: 40px;
+      padding: 0 15px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      font-size: 1rem;
+
+      &:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+      }
+    }
+
+    button {
+      height: 40px;
+      padding: 0 15px;
+      font-size: 1rem;
+    }
+  }
+
+  .btn {
+    font-size: 1rem;
+    padding: 10px 20px;
+  }
+}
+

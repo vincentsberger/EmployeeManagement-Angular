@@ -1,0 +1,74 @@
+<app-main-view>
+  <div class="container edit-employee-container">
+    <h1 class="mb-4">Mitarbeiter bearbeiten</h1>
+
+    <form [formGroup]="employeeForm">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="firstName" class="form-label">Vorname</label>
+          <input id="firstName" type="text" class="form-control" formControlName="firstName" />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="lastName" class="form-label">Nachname</label>
+          <input id="lastName" type="text" class="form-control" formControlName="lastName" />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="phone" class="form-label">Telefon</label>
+          <input id="phone" type="text" class="form-control" formControlName="phone" />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="street" class="form-label">Straße</label>
+          <input id="street" type="text" class="form-control" formControlName="street" />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="postcode" class="form-label">Postleitzahl</label>
+          <input id="postcode" type="text" class="form-control" formControlName="postcode" />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="city" class="form-label">Stadt</label>
+          <input id="city" type="text" class="form-control" formControlName="city" />
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h2 class="h5">Fähigkeiten</h2>
+
+        <ul class="list-group mb-3">
+          <li
+            *ngFor="let skill of qualifications.controls; let i = index"
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            {{ skill.value.skill }}
+            <button
+              class="btn btn-link text-danger"
+              (click)="deleteQualification(skill.value.skill)"
+            >
+              &times;
+            </button>
+          </li>
+        </ul>
+
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="newSkill"
+          placeholder="Neue Fähigkeit hinzufügen"
+          />
+          <button
+            class="btn btn-primary ms-2"
+            type="button"
+            (click)="addSkill()"
+          >
+            Hinzufügen
+          </button>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end mt-4">
+        <button class="btn btn-secondary me-2" type="button" (click)="cancel()">Abbrechen</button>
+        <button class="btn btn-primary" type="button" (click)="save()">Speichern</button>
+      </div>
+    </form>
+  </div>
+</app-main-view>

@@ -1,53 +1,55 @@
 import Keycloak from 'keycloak-js';
-import {Component, inject, OnInit} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable, of, tap} from 'rxjs';
-import {ActivatedRoute, RouterLink} from '@angular/router';
-import {Employee} from '../../Employee';
-import {MainViewComponent} from '../main-view/main-view.component';
-import {Qualification} from "../../model/Qualification";
-import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
-import {map} from "rxjs/operators";
+import { Component, inject, OnInit } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { MainViewComponent } from '../main-view/main-view.component';
+import { Qualification } from "../../model/Qualification";
+import { Employee } from '../../Employee';
+import { AsyncPipe, NgIf, NgForOf } from "@angular/common";
+import { switchMap, map } from 'rxjs/operators';
 
 @Component({
-    standalone: true,
-    selector: 'app-employee-detail',
-    imports: [MainViewComponent, NgIf, AsyncPipe, NgForOf, RouterLink],
-    templateUrl: './employee-detail-view.component.html',
-    styleUrls: ['./employee-detail-view.component.scss'],
+  standalone: true,
+  selector: 'app-employee-detail',
+  imports: [MainViewComponent, NgIf, AsyncPipe, NgForOf, RouterLink],
+  templateUrl: './employee-detail-view.component.html',
+  styleUrls: ['./employee-detail-view.component.scss'],
 })
 export class EmployeeDetailViewComponent implements OnInit {
-    keycloak = inject(Keycloak);
-    bearer = this.keycloak.token;
-    employee$: Observable<Employee | null> = of(null);
-    qualifications$: Observable<Qualification[]> = of([]);
+  private keycloak = inject(Keycloak);
+  private bearer = this.keycloak.token;
 
-    constructor(private http: HttpClient, private route: ActivatedRoute) {
-    }
+  employee$: Observable<Employee | null>;
+  qualifications$: Observable<Qualification[]>;
 
-    ngOnInit() {
-        const id = this.route.snapshot.paramMap.get('id');
-        if (id) {
-            this.fetchEmployeeDetails(id);
-            this.fetchEmployeeQualifications(id);
-        }
-    }
+  constructor(private http: HttpClient, private route: ActivatedRoute) {
+    this.employee$ = this.route.paramMap.pipe(
+      switchMap(params => this.fetchEmployeeDetails(params.get('id')))
+    );
+    this.qualifications$ = this.route.paramMap.pipe(
+      switchMap(params => this.fetchEmployeeQualifications(params.get('id')))
+    );
+  }
 
-    fetchEmployeeDetails(id: string): void {
-        this.employee$ = this.http.get<Employee>(`http://localhost:8089/employees/${id}`, {
-            headers: new HttpHeaders().set('Authorization', `Bearer ${this.bearer}`),
-        });
-    }
+  ngOnInit(): void {}
 
-    fetchEmployeeQualifications(id: string): void {
-        this.qualifications$ = this.http.get<{ skillSet: Qualification[] }>(
-            `http://localhost:8089/employees/${id}/qualifications`,
-            {
-                headers: new HttpHeaders().set('Authorization', `Bearer ${this.bearer}`),
-            }
-        ).pipe(
-            map(response => response.skillSet)
-        );
-    }
+  private createAuthHeaders() {
+    return new HttpHeaders().set('Authorization', `Bearer ${this.bearer}`);
+  }
 
+  private fetchEmployeeDetails(id: string | null): Observable<Employee | null> {
+    if (!id) return of(null);
+    return this.http.get<Employee>(`http://localhost:8089/employees/${id}`, {
+      headers: this.createAuthHeaders(),
+    });
+  }
+
+  private fetchEmployeeQualifications(id: string | null): Observable<Qualification[]> {
+    if (!id) return of([]);
+    return this.http.get<{ skillSet: Qualification[] }>(
+      `http://localhost:8089/employees/${id}/qualifications`,
+      { headers: this.createAuthHeaders() }
+    ).pipe(map(response => response.skillSet));
+  }
 }

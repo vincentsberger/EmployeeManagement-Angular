@@ -6,12 +6,14 @@ import {NewQualificationViewComponent} from "./components/new-qualification-view
 import { canActivateAuthRole } from './guards/auth-role.guard';
 import { HomeServicesViewComponent } from './components/home-services-view/home-services-view.component';
 import {EmployeeDetailViewComponent} from "./components/employee-detail-view/employee-detail-view.component";
+import {EmployeeEditViewComponent} from "./components/employee-edit-view/employee-edit-view.component";
 
 export const routes: Routes = [
   { path: "", component: HomeServicesViewComponent},
   { path: "home", component: HomeViewComponent, canActivate: [canActivateAuthRole] },
   { path: "employees", component: EmployeeListComponent,canActivate: [canActivateAuthRole] },
   { path: "employees/:id", component: EmployeeDetailViewComponent,canActivate: [canActivateAuthRole] },
+  { path: "employees/:id/edit", component: EmployeeEditViewComponent,canActivate: [canActivateAuthRole] },
   { path: "qualifications", component: QualificationViewComponent, canActivate: [canActivateAuthRole] },
   { path: "new-qualification", component: NewQualificationViewComponent, canActivate: [canActivateAuthRole] },
 ];

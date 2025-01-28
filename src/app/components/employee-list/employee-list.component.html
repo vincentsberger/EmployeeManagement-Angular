@@ -33,10 +33,9 @@
           </span>
 
           <span>
-             <i
-               class="bi bi-pencil text-primary"
-               role="button"
-             ></i>
+             <a [routerLink]="['/employees', employee.id, 'edit']">
+              <i class="bi bi-pencil text-primary" role="button"></i>
+            </a>
 
             <i
               class="bi bi-trash text-danger ms-3"
