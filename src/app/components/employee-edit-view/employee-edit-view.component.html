@@ -54,6 +54,7 @@
             class="form-control"
             formControlName="newSkill"
           placeholder="Neue Fähigkeit hinzufügen"
+            (keydown.enter)="$event.preventDefault()"
           />
           <button
             class="btn btn-primary ms-2"
