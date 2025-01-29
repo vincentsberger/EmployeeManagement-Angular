@@ -18,7 +18,7 @@ html.darkmode {
   color-scheme: dark;
   @include mat.theme(
     (
-      color: mat.$azure-palette,
+      color: mat.$green-palette,
       typography: Roboto,
       density: 0,
     ),
@@ -64,5 +64,13 @@ body {
 
 .fab i {
   font-size: 1.5rem;
+}
+
+
+:app-qualification-view  {
+  @include mat.snack-bar-overrides((
+    container-color: orange,
+    supporting-text-color: red,
+  ));
 }
 

@@ -3,7 +3,7 @@ import {Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable, of} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Employee} from '../../Employee';
+import {Employee} from '../../model/Employee';
 import {MainViewComponent} from '../main-view/main-view.component';
 import {FormsModule} from "@angular/forms";
 import {map} from 'rxjs/operators';

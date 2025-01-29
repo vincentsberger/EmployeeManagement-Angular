@@ -5,7 +5,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { MainViewComponent } from '../main-view/main-view.component';
 import { Qualification } from "../../model/Qualification";
-import { Employee } from '../../Employee';
+import { Employee } from '../../model/Employee';
 import { AsyncPipe, NgIf, NgForOf } from "@angular/common";
 import { switchMap, map } from 'rxjs/operators';
 

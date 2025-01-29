@@ -29,7 +29,7 @@ export class CreateEmployeeViewComponent {
       postcode: ['', Validators.required],
       city: ['', Validators.required],
       phone: ['', Validators.required],
-      skillSet:[0]
+      skillSet:["", Validators.required]
     });
   }
 
