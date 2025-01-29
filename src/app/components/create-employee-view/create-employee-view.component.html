@@ -5,18 +5,19 @@
   <div class="container">
 
     <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
-      <div class="inputfield">
-        <label for="firstName">Vorname</label>
-        <input class="form-control rounded-pill mb-2" id="firstName" formControlName="firstName" type="text">
 
-        <label for="lastName">Nachname</label>
-        <input class="form-control rounded-pill mb-2" id="lastName" formControlName="lastName" type="text">
+      <div class="formfield">
+        <div class="inputfield">
+          <label for="firstName">Vorname</label>
+          <input class="form-control rounded-pill mb-2" id="firstName" formControlName="firstName" type="text">
 
-        <label for="phone">Telefonnummer</label>
-        <input class="form-control rounded-pill mb-2" id="phone" formControlName="phone" type="text">
-      </div>
+          <label for="lastName">Nachname</label>
+          <input class="form-control rounded-pill mb-2" id="lastName" formControlName="lastName" type="text">
 
-      <div>
+          <label for="phone">Telefonnummer</label>
+          <input class="form-control rounded-pill mb-2" id="phone" formControlName="phone" type="text">
+        </div>
+
         <div class="inputfield">
           <label for="street">Straße und Hausnummer</label>
           <input class="form-control rounded-pill mb-2" id="street" formControlName="street" type="text">
@@ -26,12 +27,29 @@
 
           <label for="postcode">Postleitzahl</label>
           <input class="form-control rounded-pill mb-2" id="postcode" formControlName="postcode" type="text">
-
         </div>
       </div>
 
+      <h5 class="container">Qualifikationen</h5>
       <div class="container">
-        <input type="text" id="skillSet" name="skillSet" placeholder="Skill Placeholder" formControlName="skillSet">
+        <mat-form-field appearance="fill">
+          <mat-select [(value)]="selectedItems" multiple placeholder="Qualifikationen">
+
+<!--            &lt;!&ndash; Search Input inside Dropdown &ndash;&gt;-->
+<!--            <mat-option>-->
+<!--              <mat-form-field>-->
+<!--                <mat-label>Search</mat-label>-->
+<!--                <input matInput [(ngModel)]="searchQuery" (input)="filterOptions()" placeholder="Search fruits" />-->
+<!--              </mat-form-field>-->
+<!--            </mat-option>-->
+
+            <!-- Options -->
+            <mat-option *ngFor="let fruit of filteredOptions" [value]="fruit">
+              {{ fruit }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
       </div>
 
       <div class="container mt-3">

@@ -3,6 +3,10 @@
   justify-content: center;
 }
 
+.formfield {
+  display: flex;
+}
+
 .form {
   display: flex;
   justify-content: space-between;
@@ -11,3 +15,51 @@
 .inputfield {
   margin: 1rem;
 }
+
+.select {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+select option {
+  background: #3d3e3e;
+  color: #d6d2d2;
+  padding: 10px;
+}
+
+select option:hover {
+  background: #3498db;
+  color: white;
+}
+
+
+mat-form-field {
+  width: 100%;
+}
+
+.mat-select-panel {
+  max-height: 200px;  /* Optional: to make the dropdown scrollable if many options */
+  overflow-y: auto;
+}
+
+mat-option {
+  white-space: normal; /* Ensure options break lines for longer text */
+}
+
+.mat-select-trigger {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.mat-select-trigger div {
+  background-color: #f0f0f0;
+  padding: 5px;
+  border-radius: 5px;
+}
+
