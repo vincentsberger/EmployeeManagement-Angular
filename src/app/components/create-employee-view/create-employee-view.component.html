@@ -44,8 +44,8 @@
 <!--            </mat-option>-->
 
             <!-- Options -->
-            <mat-option *ngFor="let fruit of filteredOptions" [value]="fruit">
-              {{ fruit }}
+            <mat-option *ngFor="let option of options$ | async">
+              {{ option }}
             </mat-option>
           </mat-select>
         </mat-form-field>

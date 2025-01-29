@@ -1,4 +1,4 @@
-import {Component, inject, ViewChild} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MainViewComponent} from "../main-view/main-view.component";
 import {RouterLink} from "@angular/router";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
@@ -9,10 +9,10 @@ import {Qualification} from "../../model/Qualification";
 import {AsyncPipe, NgForOf} from "@angular/common";
 import {MatFormField, MatFormFieldModule} from "@angular/material/form-field";
 import {MatOption, MatSelect, MatSelectModule} from "@angular/material/select";
-import {BrowserModule} from "@angular/platform-browser";
 import {MatOptionModule} from "@angular/material/core";
 import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
+import {Observable, of} from "rxjs";
 
 @Component({
   selector: 'app-create-employee-view',
@@ -20,9 +20,7 @@ import {MatIconModule} from "@angular/material/icon";
     MainViewComponent,
     RouterLink,
     ReactiveFormsModule,
-    QualificationViewComponent,
     FormsModule,
-    AsyncPipe,
     NgForOf,
     MatFormField,
     MatSelect,
@@ -32,9 +30,9 @@ import {MatIconModule} from "@angular/material/icon";
     MatOptionModule,
     MatInputModule,
     MatIconModule,
-    FormsModule
+    FormsModule,
+    AsyncPipe
   ],
-
   templateUrl: './create-employee-view.component.html',
   styleUrl: './create-employee-view.component.scss'
 })
@@ -44,12 +42,10 @@ export class CreateEmployeeViewComponent {
   keycloak = inject(Keycloak);
   bearer = this.keycloak.token;
   employeeForm: FormGroup;
+  options$: Observable<Qualification[]>;
 
-  options = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'];
   selectedItems: string[] = [];
   searchQuery: string = '';
-  filteredOptions = [...this.options]; // Initialize with all options
-
 
   // filterOptions() {
   //   this.filteredOptions = this.options.filter(option =>
@@ -66,6 +62,16 @@ export class CreateEmployeeViewComponent {
       city: ['', Validators.required],
       phone: ['', Validators.required],
       skillSet: [0, Validators.required],
+    });
+    this.options$ = of([]);
+    this.fetchData();
+  }
+
+  fetchData() {
+    this.options$ = this.http.get<Qualification[]>('http://localhost:8089/qualifications', {
+      headers: new HttpHeaders()
+        .set('Content-Type', 'application/json')
+        .set('Authorization', `Bearer ${this.bearer}`)
     });
   }
 
