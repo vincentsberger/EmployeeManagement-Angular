@@ -1,6 +1,6 @@
 <app-main-view>
   <div class="container">
-    <h1>Mitarbeiter Liste</h1>
+    <h1>Mitarbeiterliste</h1>
 
     <div class="mb-3">
       <input
@@ -33,10 +33,9 @@
           </span>
 
           <span>
-             <i
-               class="bi bi-pencil text-primary"
-               role="button"
-             ></i>
+             <a [routerLink]="['/employees', employee.id, 'edit']">
+              <i class="bi bi-pencil text-primary" role="button"></i>
+            </a>
 
             <i
               class="bi bi-trash text-danger ms-3"
@@ -51,10 +50,10 @@
     </div>
 
     <button
-      class="btn btn-primary position-fixed bottom-0 end-0 m-4"
+      class="fab btn position-fixed bottom-0 end-0 m-4 d-flex align-items-center justify-content-center shadow"
       routerLink="/create-employee"
     >
-      Neuer Mitarbeiter
+      <i class="bi bi-plus-lg"></i>
     </button>
   </div>
 </app-main-view>
@@ -63,3 +62,4 @@
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
 />
+<link rel="stylesheet" href="styles.scss" />
