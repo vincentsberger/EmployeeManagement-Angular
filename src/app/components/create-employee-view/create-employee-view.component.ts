@@ -74,8 +74,16 @@ export class CreateEmployeeViewComponent {
   }
 
   private addExistingQualificationToEmployee(qualificationId: number): void {
-    this.selectedItems.push(qualificationId);
-    this.updateSkillSet();
+    if (!this.selectedItems.includes(qualificationId)) {
+      this.selectedItems.push(qualificationId);
+      this.updateSkillSet();
+
+      const qualifications = this.qualificationsSubject.getValue();
+      const updatedQualifications = qualifications.map(q =>
+        q.id === qualificationId ? {...q, selected: true} : q
+      );
+      this.qualificationsSubject.next(updatedQualifications);
+    }
     this.resetNewSkill();
   }
 
