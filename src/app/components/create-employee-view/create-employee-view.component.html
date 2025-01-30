@@ -35,18 +35,18 @@
         <mat-form-field appearance="fill">
           <mat-select id="qualificationSelect" name="qualificationSelect" [(value)]="selectedItems"
                       multiple placeholder="Qualifikationen" (selectionChange)="onSelectionChange($event)">
-            <!-- Options -->
             <mat-option *ngFor="let option of options$ | async" value="{{option.id}}">
               {{ option.skill }}
             </mat-option>
           </mat-select>
         </mat-form-field>
-
       </div>
 
       <div class="container mt-3">
-        <button class="btn text-primary btn-outline-secondary me-4" type="submit">Speichern</button>
-        <button class="btn text-danger btn-outline-secondary me-2" type="button" routerLink="/employees">Abbrechen</button>
+        <div class="d-flex justify-content-end w-100 mt-4">
+          <button class="btn btn-secondary me-2" type="button" routerLink="/employees">Abbrechen</button>
+          <button class="btn btn-primary" type="submit">Hinzufügen</button>
+        </div>
       </div>
     </form>
   </div>
