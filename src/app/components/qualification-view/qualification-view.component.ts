@@ -1,7 +1,8 @@
 import { Qualification } from './../../model/Qualification';
+import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { MainViewComponent } from '../main-view/main-view.component';
 import Keycloak from 'keycloak-js';
@@ -10,8 +11,8 @@ import { QualificationEmployeesDTO } from '../../model/DTO/qualification-employe
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from '../modal/confirmation-modal/confirmation-modal.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { CustomToastComponentComponent } from '../messages/custom-toast-component/custom-toast-component.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-qualification-view',
@@ -38,18 +39,17 @@ export class QualificationViewComponent {
   searchQuery: string = '';
 
   constructor(private http: HttpClient) {
-    this.qualifications$ = of([]);
+    this.qualifications$ = this.fetchData();
     this.filteredQualifications$ = this.qualifications$;
-    this.fetchData();
+    this.updateView();
   }
 
   fetchData() {
-    this.qualifications$ = this.http.get<Qualification[]>('http://localhost:8089/qualifications', {
+    return this.http.get<Qualification[]>('http://localhost:8089/qualifications', {
       headers: new HttpHeaders()
         .set('Content-Type', 'application/json')
         .set('Authorization', `Bearer ${this.bearer}`)
     });
-    this.filteredQualifications$ = this.qualifications$;
   }
 
   searchQualification() {
@@ -175,21 +175,7 @@ export class QualificationViewComponent {
         this.isLoading = true;
         this.fetchData();
         this.updateView();
-        this.openSnackbar(
-          `Qualifikation "${qualification.skill}" [ID: ${qualification.id}] erfolgreich gelöscht.`
-        );
       }
-    });
-  }
-
-  openSnackbar(message: string, type: string = 'default') {
-    this.snackbar.open(message, 'OK', {
-      duration: 3000,
-      verticalPosition: 'bottom',
-      data: {
-        message: message,
-        type,
-      },
     });
   }
 }
