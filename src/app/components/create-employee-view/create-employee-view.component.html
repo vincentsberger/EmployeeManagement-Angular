@@ -1,53 +1,89 @@
-<app-main-view></app-main-view>
-<section>
-  <h1 class="container">Mitarbeiter anlegen</h1>
-
+<app-main-view>
   <div class="container">
+    <h1 class="text-center">Mitarbeiter anlegen</h1>
 
     <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
-
-      <div class="formfield">
-        <div class="inputfield">
-          <label for="firstName">Vorname</label>
-          <input class="form-control rounded-pill mb-2" id="firstName" formControlName="firstName" type="text">
-
-          <label for="lastName">Nachname</label>
-          <input class="form-control rounded-pill mb-2" id="lastName" formControlName="lastName" type="text">
-
-          <label for="phone">Telefonnummer</label>
-          <input class="form-control rounded-pill mb-2" id="phone" formControlName="phone" type="text">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="firstName" class="form-label">Vorname</label>
+          <input class="form-control rounded mb-2"
+                 id="firstName"
+                 formControlName="firstName"
+                 type="text">
+          <div *ngIf="employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched" class="text-danger">
+            <div *ngIf="employeeForm.get('firstName')?.hasError('required')">Vorname ist erforderlich.</div>
+          </div>
         </div>
-
-        <div class="inputfield">
-          <label for="street">Straße und Hausnummer</label>
-          <input class="form-control rounded-pill mb-2" id="street" formControlName="street" type="text">
-
-          <label for="city">Stadt</label>
-          <input class="form-control rounded-pill mb-2" id="city" formControlName="city" type="text">
-
-          <label for="postcode">Postleitzahl</label>
-          <input class="form-control rounded-pill mb-2" id="postcode" formControlName="postcode" type="text">
+        <div class="col-md-6 mb-3">
+          <label for="lastName" class="form-label">Nachname</label>
+          <input class="form-control rounded mb-2"
+                 id="lastName"
+                 formControlName="lastName"
+                 type="text">
+          <div *ngIf="employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched" class="text-danger">
+            <div *ngIf="employeeForm.get('lastName')?.hasError('required')">Nachname ist erforderlich.</div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="phone" class="form-label">Telefonnummer</label>
+          <input class="form-control rounded mb-2" id="phone" formControlName="phone" type="text">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="street" class="form-label">Straße und Hausnummer</label>
+          <input class="form-control rounded mb-2" id="street" formControlName="street" type="text">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="postcode" class="form-label">Postleitzahl</label>
+          <input class="form-control rounded mb-2"
+                 id="postcode"
+                 formControlName="postcode"
+                 type="text">
+          <div *ngIf="employeeForm.get('postcode')?.invalid && employeeForm.get('postcode')?.touched" class="text-danger">
+            <div *ngIf="employeeForm.get('postcode')?.hasError('required')">Postleitzahl ist erforderlich.</div>
+            <div *ngIf="employeeForm.get('postcode')?.hasError('pattern')">Die Postleitzahl muss eine 5-stellig Zahl sein.</div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="city" class="form-label">Stadt</label>
+          <input class="form-control rounded mb-2" id="city" formControlName="city" type="text">
         </div>
       </div>
 
-      <h5 class="container">Qualifikationen</h5>
-      <div class="container">
-        <mat-form-field appearance="fill">
-          <mat-select id="qualificationSelect" name="qualificationSelect" [(value)]="selectedItems"
-                      multiple placeholder="Qualifikationen" (selectionChange)="onSelectionChange($event)">
-            <mat-option *ngFor="let option of options$ | async" value="{{option.id}}">
-              {{ option.skill }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      <div>
+        <h5>Qualifikationen</h5>
+        <div class="mb-3">
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-select
+              id="qualificationSelect"
+              name="qualificationSelect"
+              [(value)]="selectedItems"
+              multiple
+              placeholder="aus existierenden Qualifikationen wählen"
+              (selectionChange)="onSelectionChange($event)">
+              <mat-option *ngFor="let option of options$ | async" [value]="option.id">
+                {{ option.skill }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="d-flex gap-2">
+          <input
+            type="text"
+            class="form-control flex-grow-1"
+            formControlName="newSkill"
+            placeholder="Eine neue Qualifikation hinzufügen"
+            (keydown.enter)="$event.preventDefault()"/>
+          <button class="btn btn-primary" type="button" (click)="addSkill()">Hinzufügen</button>
+        </div>
       </div>
 
-      <div class="container mt-3">
-        <div class="d-flex justify-content-end w-100 mt-4">
-          <button class="btn btn-secondary me-2" type="button" routerLink="/employees">Abbrechen</button>
-          <button class="btn btn-primary" type="submit">Hinzufügen</button>
-        </div>
+      <div class="d-flex justify-content-end mt-4">
+        <button class="btn btn-secondary me-2" type="button" routerLink="/employees">Abbrechen</button>
+        <button class="btn btn-primary" type="submit" [disabled]="employeeForm.invalid">
+          Hinzufügen
+        </button>
       </div>
     </form>
   </div>
-</section>
+</app-main-view>
