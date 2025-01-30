@@ -1,11 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
-import {FormBuilder, FormGroup, FormArray, ReactiveFormsModule} from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import Keycloak from 'keycloak-js';
 import { firstValueFrom } from 'rxjs';
 import { MainViewComponent } from "../main-view/main-view.component";
-import {CommonModule} from "@angular/common";
+import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
 
 @Component({
@@ -25,6 +25,8 @@ export class EmployeeEditViewComponent implements OnInit {
 
   employeeForm: FormGroup;
   employeeId: string | null = null;
+
+  deletedSkills: string[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -157,21 +159,15 @@ export class EmployeeEditViewComponent implements OnInit {
     }
   }
 
-  async deleteQualification(skill: string): Promise<void> {
+  deleteQualification(skill: string): void {
     const skillControl = this.qualifications.controls.find(control => control.value.skill === skill);
     if (!skillControl) return;
 
-    try {
-      await firstValueFrom(this.http
-        .delete(`http://localhost:8089/employees/${this.employeeId}/qualifications/${skillControl.value.id}`, { headers: this.headers })
-      );
+    this.deletedSkills.push(skill);
 
-      const skillIndex = this.qualifications.controls.findIndex(control => control.value.skill === skill);
-      if (skillIndex !== -1) {
-        this.qualifications.removeAt(skillIndex);
-      }
-    } catch (error) {
-      console.error('Fehler beim Löschen der Qualifikation:', error);
+    const skillIndex = this.qualifications.controls.findIndex(control => control.value.skill === skill);
+    if (skillIndex !== -1) {
+      this.qualifications.removeAt(skillIndex);
     }
   }
 
@@ -180,6 +176,15 @@ export class EmployeeEditViewComponent implements OnInit {
     const updatedEmployee = { ...this.employeeForm.value, skillSet };
 
     try {
+      for (const skill of this.deletedSkills) {
+        const skillControl = this.qualifications.controls.find(control => control.value.skill === skill);
+        if (skillControl) {
+          await firstValueFrom(this.http
+            .delete(`http://localhost:8089/employees/${this.employeeId}/qualifications/${skillControl.value.id}`, { headers: this.headers })
+          );
+        }
+      }
+
       await firstValueFrom(this.http
         .put<any>(`http://localhost:8089/employees/${this.employeeId}`, updatedEmployee, { headers: this.headers })
       );
