@@ -14,6 +14,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import {MatIcon} from "@angular/material/icon";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-qualification-view',
@@ -40,25 +41,36 @@ export class QualificationViewComponent {
   filteredQualifications$: Observable<Qualification[]>;
   searchQuery: string = '';
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private toastr: ToastrService) {
     this.qualifications$ = this.fetchData();
     this.filteredQualifications$ = this.qualifications$;
     this.updateView();
   }
 
   fetchData() {
-    return this.http.get<Qualification[]>('http://localhost:8089/qualifications', {
-      headers: new HttpHeaders()
-        .set('Content-Type', 'application/json')
-        .set('Authorization', `Bearer ${this.bearer}`)
-    });
+    return this.http.get<Qualification[]>(
+      'http://localhost:8089/qualifications',
+      {
+        headers: new HttpHeaders()
+          .set('Content-Type', 'application/json')
+          .set('Authorization', `Bearer ${this.bearer}`),
+      }
+    );
   }
 
+/**
+ * Filters the list of qualifications based on the current search query.
+ *
+ * This method updates `filteredQualifications$` with qualifications whose
+ * `skill` property contains the search query, ignoring case differences.
+ */
   searchQualification() {
     this.filteredQualifications$ = this.qualifications$.pipe(
-      map(qualifications =>
-        qualifications.filter(qualification =>
-          qualification.skill?.toLowerCase().includes(this.searchQuery.toLowerCase())
+      map((qualifications) =>
+        qualifications.filter((qualification) =>
+          qualification.skill
+            ?.toLowerCase()
+            .includes(this.searchQuery.toLowerCase())
         )
       )
     );
@@ -66,7 +78,6 @@ export class QualificationViewComponent {
 
   updateView() {
     this.fetchData();
-    console.log();
     setTimeout(() => {
       this.isLoading = false;
     }, 500);
@@ -74,6 +85,10 @@ export class QualificationViewComponent {
 
   // TODO: refactor request chain with concatMap or similar function https://www.learnrxjs.io/learn-rxjs/operators/transformation/concatmap
 
+  /**
+   * Deletes a qualification from the database and removes it from all employees.
+   * @param qualification The qualification to be deleted
+   */
   deleteQualification(qualification: Qualification) {
     // 1. alle Mitarbeiter mit dieser Qualifikation holen
     this.getEmployeesByQualification(qualification).subscribe({
@@ -88,13 +103,6 @@ export class QualificationViewComponent {
       },
       error: (error: any) => {},
     });
-
-    // 2. Durch die Mitarbeiter iterieren und die Zuordnung der Qualifikation zum Mitarbeiter entfernen
-    // this.employeesToProcess.forEach((employee) => {
-    // this.deleteQualificationFromEmployee(employee.id, qid)
-    // });
-    // 3. Qualifikation löschen
-    // this.employeesToProcess = [];
   }
 
   /**
@@ -177,6 +185,12 @@ export class QualificationViewComponent {
         this.isLoading = true;
         this.fetchData();
         this.updateView();
+        this.toastr.success(`Qualifikation "${qualification.skill}" [ID: ${qualification.id}] wurde erfolgreich gelöscht. `, "Erfolgreich!", {
+          timeOut: 3000,
+          closeButton: true,
+          progressBar: true,
+          positionClass: "toast-bottom-center"
+        });
       }
     });
   }

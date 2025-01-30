@@ -24,9 +24,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": ["node_modules/ngx-toastr/toastr.css", "src/styles.scss"],
             "scripts": []
           },
           "configurations": {
