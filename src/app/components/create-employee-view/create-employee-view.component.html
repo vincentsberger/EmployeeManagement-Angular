@@ -79,7 +79,7 @@
       </div>
 
       <div class="d-flex justify-content-end mt-4">
-        <button class="btn btn-secondary me-2" type="button" routerLink="/employees">Abbrechen</button>
+        <button class="btn btn-secondary me-2" type="button" (click)="onCancel()">Abbrechen</button>
         <button class="btn btn-primary" type="submit" [disabled]="employeeForm.invalid">
           Hinzufügen
         </button>

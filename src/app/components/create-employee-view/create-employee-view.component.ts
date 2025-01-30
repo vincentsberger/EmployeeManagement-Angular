@@ -134,6 +134,10 @@ export class CreateEmployeeViewComponent {
     }
   }
 
+  onCancel() {
+    this.router.navigate(['/employees']);
+  }
+
   private handleError(message: string) {
     alert(message);
   }
