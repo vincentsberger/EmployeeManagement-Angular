@@ -3,12 +3,14 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {FormsModule} from "@angular/forms";
 import Keycloak from "keycloak-js";
+import {MainViewComponent} from "../main-view/main-view.component";
 
 @Component({
   selector: 'app-new-qualification-view',
   standalone: true,
   imports: [
-    FormsModule
+    FormsModule,
+    MainViewComponent
   ],
   templateUrl: './new-qualification-view.component.html',
   styleUrl: './new-qualification-view.component.css'
