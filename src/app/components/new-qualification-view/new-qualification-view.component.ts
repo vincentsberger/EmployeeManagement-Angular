@@ -24,7 +24,10 @@ export class NewQualificationViewComponent {
     if (this.qualificationName.trim() === '') {
       alert('Der Name der Qualifikation darf nicht leer sein.');
       return;
-  }
+  } if (this.qualificationName.length > 35) {
+      alert('Der Name der Qualifikation ist zu lang');
+      return;
+    }
 
     const payload = { skill: this.qualificationName };
 
