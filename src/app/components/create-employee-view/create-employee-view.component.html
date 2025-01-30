@@ -45,7 +45,7 @@
 
             <!-- Options -->
             <mat-option *ngFor="let option of options$ | async">
-              {{ option }}
+              {{ option.skill }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -53,8 +53,8 @@
       </div>
 
       <div class="container mt-3">
-        <button class="btn text-primary btn-outline-secondary me-4" type="submit">Save</button>
-        <button class="btn text-danger btn-outline-secondary me-2" type="button" routerLink="/employees">Cancel</button>
+        <button class="btn text-primary btn-outline-secondary me-4" type="submit">Speichern</button>
+        <button class="btn text-danger btn-outline-secondary me-2" type="button" routerLink="/employees">Abbrechen</button>
       </div>
     </form>
   </div>

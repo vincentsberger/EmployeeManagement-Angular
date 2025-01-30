@@ -44,7 +44,7 @@ export class CreateEmployeeViewComponent {
   employeeForm: FormGroup;
   options$: Observable<Qualification[]>;
 
-  selectedItems: string[] = [];
+  selectedItems: number[] = [];
   searchQuery: string = '';
 
   // filterOptions() {
@@ -61,7 +61,7 @@ export class CreateEmployeeViewComponent {
       postcode: ['', Validators.required],
       city: ['', Validators.required],
       phone: ['', Validators.required],
-      skillSet: [0, Validators.required],
+      skillSet: [this.selectedItems],
     });
     this.options$ = of([]);
     this.fetchData();
