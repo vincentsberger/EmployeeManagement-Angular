@@ -33,16 +33,21 @@
           </span>
 
           <span>
-             <a [routerLink]="['/employees', employee.id, 'edit']">
-              <i class="bi bi-pencil text-primary" role="button"></i>
-            </a>
-
-            <i
-              class="bi bi-trash text-danger ms-3"
+            <a [routerLink]="['/employees', employee.id, 'edit']">
+              <mat-icon
+                class="text-primary"
+                role="button"
+                style="vertical-align: middle"
+              >edit</mat-icon>
+           </a>
+            <mat-icon
+              class="text-danger ms-3"
               role="button"
               (click)="deleteEmployee(employee.id!)"
-            ></i>
+              style="vertical-align: middle"
+            >delete</mat-icon>
           </span>
+
         </div>
 
         <div class="border-bottom" *ngIf="!last"></div>

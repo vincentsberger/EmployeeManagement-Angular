@@ -30,12 +30,14 @@
           </span>
 
           <span>
-            <i
-              class="bi bi-trash text-danger"
+            <mat-icon
+              class="text-danger"
               role="button"
               (click)="openDeleteQualificationModal(qualification)"
-            ></i>
+              style="vertical-align: middle"
+            >delete</mat-icon>
           </span>
+
         </div>
 
         <div class="border-bottom" *ngIf="!last"></div>

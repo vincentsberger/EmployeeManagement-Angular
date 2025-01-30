@@ -13,6 +13,7 @@ import { ConfirmationModalComponent } from '../modal/confirmation-modal/confirma
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import {MatIcon} from "@angular/material/icon";
 
 @Component({
   selector: 'app-qualification-view',
@@ -25,6 +26,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     MatDialogModule,
     MatProgressSpinnerModule,
+    MatIcon,
   ],
   templateUrl: './qualification-view.component.html',
   styleUrl: './qualification-view.component.scss',

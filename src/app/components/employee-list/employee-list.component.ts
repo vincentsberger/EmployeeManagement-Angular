@@ -8,11 +8,12 @@ import {MainViewComponent} from '../main-view/main-view.component';
 import {FormsModule} from "@angular/forms";
 import {map} from 'rxjs/operators';
 import {Router, RouterLink} from "@angular/router";
+import {MatIcon} from "@angular/material/icon";
 
 @Component({
   standalone: true,
   selector: 'app-employee-list',
-  imports: [CommonModule, MainViewComponent, FormsModule, RouterLink],
+  imports: [CommonModule, MainViewComponent, FormsModule, RouterLink, MatIcon],
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.scss'],
 })
