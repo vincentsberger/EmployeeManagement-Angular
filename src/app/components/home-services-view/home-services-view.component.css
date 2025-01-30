@@ -28,3 +28,9 @@
   }
 }
 
+.btn-light:hover {
+  background-color: #f0f0f0;
+  color: #000;
+  border: 1px solid #bbb;
+}
+

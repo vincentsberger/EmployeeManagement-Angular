@@ -2,7 +2,7 @@ import Keycloak from 'keycloak-js';
 import { Component, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
+import {CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
