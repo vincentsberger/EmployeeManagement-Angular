@@ -47,13 +47,14 @@ export class EmployeeListComponent {
   }
 
   searchEmployees() {
+    const query = this.searchQuery.toLowerCase().trim();
+
     this.filteredEmployees$ = this.employees$.pipe(
       map(employees =>
-        employees.filter(employee =>
-          `${employee.firstName} ${employee.lastName}`
-            .toLowerCase()
-            .includes(this.searchQuery.toLowerCase())
-        )
+        employees.filter(employee => {
+          const fullName = `${employee.firstName ?? ''} ${employee.lastName ?? ''}`.toLowerCase();
+          return fullName.includes(query);
+        })
       )
     );
   }
@@ -62,23 +63,21 @@ export class EmployeeListComponent {
     this.searchEmployees();
   }
 
-  deleteEmployee(employeeId: number) {
-    const confirmDelete = window.confirm('Möchten Sie diesen Mitarbeiter wirklich löschen?');
-
-    if (confirmDelete) {
-      this.http.delete(`http://localhost:8089/employees/${employeeId}`, {
-        headers: new HttpHeaders()
-          .set('Content-Type', 'application/json')
-          .set('Authorization', `Bearer ${this.bearer}`),
-      }).subscribe(
-        () => {
-          this.fetchData();
-        },
-        (error) => {
-          console.error('Fehler beim Löschen des Mitarbeiters', error);
-        }
-      );
+  deleteEmployee(employeeId: number): void {
+    if (!window.confirm('Möchten Sie diesen Mitarbeiter wirklich löschen?')) {
+      return;
     }
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.bearer}`,
+    });
+
+    this.http.delete(`http://localhost:8089/employees/${employeeId}`, { headers })
+      .subscribe({
+        next: () => this.fetchData(),
+        error: (err) => console.error('Fehler beim Löschen des Mitarbeiters:', err),
+      });
   }
 
   toggleSortByFirstName(firstName: string) {
@@ -92,45 +91,38 @@ export class EmployeeListComponent {
   }
 
   private getNextSortOrder(currentSortOrder: number): number {
-    if (currentSortOrder === 0) {
-      return 1;
-    } else if (currentSortOrder === 1) {
-      return -1;
-    } else {
-      return 0;
+    switch (currentSortOrder) {
+      case 0: return 1;
+      case 1: return -1;
+      default: return 0;
     }
   }
 
   private sortEmployees() {
     this.filteredEmployees$ = this.employees$.pipe(
       map((employees) => {
-        let sortedEmployees = [...employees];
+        return [...employees].sort((a, b) => {
+          let compareResult = 0;
 
-        if (this.sortStatus.firstName !== 0) {
-          sortedEmployees.sort((a, b) => {
-            const compareResult = (a.firstName ?? '').localeCompare(b.firstName ?? '');
-            return this.sortStatus.firstName === 1 ? compareResult : -compareResult;
-          });
-        }
+          if (this.sortStatus.firstName !== 0) {
+            compareResult = (a.firstName ?? '').localeCompare(b.firstName ?? '') * this.sortStatus.firstName;
+          }
 
-        if (this.sortStatus.lastName !== 0) {
-          sortedEmployees.sort((a, b) => {
-            const compareResult = (a.lastName ?? '').localeCompare(b.lastName ?? '');
-            return this.sortStatus.lastName === 1 ? compareResult : -compareResult;
-          });
-        }
+          if (compareResult === 0 && this.sortStatus.lastName !== 0) {
+            compareResult = (a.lastName ?? '').localeCompare(b.lastName ?? '') * this.sortStatus.lastName;
+          }
 
-        return sortedEmployees;
+          return compareResult;
+        });
       })
     );
   }
 
   getSortIcon(field: 'firstName' | 'lastName'): string {
-    if (this.sortStatus[field] === 1) {
-      return 'bi-chevron-down';
-    } else if (this.sortStatus[field] === -1) {
-      return 'bi-chevron-up';
+    switch (this.sortStatus[field]) {
+      case 1: return 'bi-chevron-down';
+      case -1: return 'bi-chevron-up';
+      default: return '';
     }
-    return '';
   }
 }
