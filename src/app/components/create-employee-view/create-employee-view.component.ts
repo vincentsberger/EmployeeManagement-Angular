@@ -70,6 +70,11 @@ export class CreateEmployeeViewComponent {
     });
   }
 
+  onSelectionChange(event: any) {
+    this.selectedItems = event.value;
+    this.employeeForm.patchValue({ skillSet: this.selectedItems });
+  }
+
   onSubmit() {
     if (this.employeeForm.valid) {
       // Retrieve form data
