@@ -33,18 +33,10 @@
       <h5 class="container">Qualifikationen</h5>
       <div class="container">
         <mat-form-field appearance="fill">
-          <mat-select [(value)]="selectedItems" multiple placeholder="Qualifikationen">
-
-<!--            &lt;!&ndash; Search Input inside Dropdown &ndash;&gt;-->
-<!--            <mat-option>-->
-<!--              <mat-form-field>-->
-<!--                <mat-label>Search</mat-label>-->
-<!--                <input matInput [(ngModel)]="searchQuery" (input)="filterOptions()" placeholder="Search fruits" />-->
-<!--              </mat-form-field>-->
-<!--            </mat-option>-->
+          <mat-select id="qualificationSelect" name="qualificationSelect" [(value)]="selectedItems" multiple placeholder="Qualifikationen">
 
             <!-- Options -->
-            <mat-option *ngFor="let option of options$ | async">
+            <mat-option *ngFor="let option of options$ | async" value="{{option.id}}">
               {{ option.skill }}
             </mat-option>
           </mat-select>

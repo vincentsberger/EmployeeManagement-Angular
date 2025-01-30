@@ -13,6 +13,7 @@ import {MatOptionModule} from "@angular/material/core";
 import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
 import {Observable, of} from "rxjs";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-create-employee-view',
@@ -45,15 +46,11 @@ export class CreateEmployeeViewComponent {
   options$: Observable<Qualification[]>;
 
   selectedItems: number[] = [];
-  searchQuery: string = '';
 
-  // filterOptions() {
-  //   this.filteredOptions = this.options.filter(option =>
-  //     option.toLowerCase().includes(this.searchQuery.toLowerCase())
-  //   );
-  // }
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
+    this.options$ = of([]);
+    this.fetchData();
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
     this.employeeForm = this.fb.group({
       lastName: ['', Validators.required],
       firstName: ['', Validators.required],
@@ -63,8 +60,6 @@ export class CreateEmployeeViewComponent {
       phone: ['', Validators.required],
       skillSet: [this.selectedItems],
     });
-    this.options$ = of([]);
-    this.fetchData();
   }
 
   fetchData() {
@@ -81,22 +76,23 @@ export class CreateEmployeeViewComponent {
       const formData = this.employeeForm.value;
 
       // Send the data to the API
-      this.http.post('http://localhost:8089/employees', {
+      this.http.post('http://localhost:8089/employees', formData, {
           headers: new HttpHeaders()
             .set('Content-Type', 'application/json')
             .set('Authorization', `Bearer ${this.bearer}`),
-        }
-        , formData)
-        .subscribe({
+        }).subscribe({
           next: (response) => {
-            console.log('Employee data saved successfully!', response);
+            console.log(response);
+            alert('Mitarbeiter Daten erfolgreich gespeichert!')
+            this.router.navigate(['/employees']);
           },
           error: (err) => {
-            console.error('Error saving employee data', err);
+            console.error(err);
+            alert('Fehler beim speichern der Daten')
           }
         });
     } else {
-      console.warn('Form is invalid. Please check the fields.');
+      alert('Daten fehlerhaft, bitte alle Felder korrekt ausfüllen');
     }
   }
 
