@@ -6,6 +6,7 @@ import Keycloak from 'keycloak-js';
 import { firstValueFrom } from 'rxjs';
 import { MainViewComponent } from "../main-view/main-view.component";
 import {CommonModule} from "@angular/common";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: 'app-employee-edit',
@@ -14,7 +15,8 @@ import {CommonModule} from "@angular/common";
   imports: [
     CommonModule,
     MainViewComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatIconModule,
   ]
 })
 export class EmployeeEditViewComponent implements OnInit {
