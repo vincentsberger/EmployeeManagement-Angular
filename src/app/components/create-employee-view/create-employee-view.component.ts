@@ -62,6 +62,10 @@ export class CreateEmployeeViewComponent {
     });
   }
 
+  logQualiChange() {
+    console.log(this.selectedItems);
+  }
+
   fetchData() {
     this.options$ = this.http.get<Qualification[]>('http://localhost:8089/qualifications', {
       headers: new HttpHeaders()
@@ -74,23 +78,24 @@ export class CreateEmployeeViewComponent {
     if (this.employeeForm.valid) {
       // Retrieve form data
       const formData = this.employeeForm.value;
+      console.log(formData);
 
       // Send the data to the API
-      this.http.post('http://localhost:8089/employees', formData, {
-          headers: new HttpHeaders()
-            .set('Content-Type', 'application/json')
-            .set('Authorization', `Bearer ${this.bearer}`),
-        }).subscribe({
-          next: (response) => {
-            console.log(response);
-            alert('Mitarbeiter Daten erfolgreich gespeichert!')
-            this.router.navigate(['/employees']);
-          },
-          error: (err) => {
-            console.error(err);
-            alert('Fehler beim speichern der Daten')
-          }
-        });
+      // this.http.post('http://localhost:8089/employees', formData, {
+      //     headers: new HttpHeaders()
+      //       .set('Content-Type', 'application/json')
+      //       .set('Authorization', `Bearer ${this.bearer}`),
+      //   }).subscribe({
+      //     next: (response) => {
+      //       console.log(response);
+      //       alert('Mitarbeiter Daten erfolgreich gespeichert!')
+      //       this.router.navigate(['/employees']);
+      //     },
+      //     error: (err) => {
+      //       console.error(err);
+      //       alert('Fehler beim speichern der Daten')
+      //     }
+        // });
     } else {
       alert('Daten fehlerhaft, bitte alle Felder korrekt ausfüllen');
     }

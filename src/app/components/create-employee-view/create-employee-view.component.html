@@ -33,7 +33,7 @@
       <h5 class="container">Qualifikationen</h5>
       <div class="container">
         <mat-form-field appearance="fill">
-          <mat-select id="qualificationSelect" name="qualificationSelect" [(value)]="selectedItems" multiple placeholder="Qualifikationen">
+          <mat-select id="qualificationSelect" name="qualificationSelect" [(value)]="selectedItems" (change)="logQualiChange()" multiple placeholder="Qualifikationen">
 
             <!-- Options -->
             <mat-option *ngFor="let option of options$ | async" value="{{option.id}}">
