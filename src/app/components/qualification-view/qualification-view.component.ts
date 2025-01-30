@@ -1,20 +1,18 @@
 import { Qualification } from './../../model/Qualification';
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, inject } from '@angular/core';
 import { map, Observable, of } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { MainViewComponent } from '../main-view/main-view.component';
 import Keycloak from 'keycloak-js';
-import { Employee } from '../../model/Employee';
-import { QualificationEmployeesDTO } from '../../model/DTO/qualification-employees-dto';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from '../modal/confirmation-modal/confirmation-modal.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import {MatIcon} from "@angular/material/icon";
+import { MatIcon } from '@angular/material/icon';
 import { ToastrService } from 'ngx-toastr';
+import { QualificationService } from '../../service/qualification.service';
 
 @Component({
   selector: 'app-qualification-view',
@@ -41,29 +39,21 @@ export class QualificationViewComponent {
   filteredQualifications$: Observable<Qualification[]>;
   searchQuery: string = '';
 
-  constructor(private http: HttpClient, private toastr: ToastrService) {
-    this.qualifications$ = this.fetchData();
+  constructor(
+    private toastr: ToastrService,
+    private qualificationService: QualificationService
+  ) {
+    this.qualifications$ = this.qualificationService.getQualifications();
     this.filteredQualifications$ = this.qualifications$;
     this.updateView();
   }
 
-  fetchData() {
-    return this.http.get<Qualification[]>(
-      'http://localhost:8089/qualifications',
-      {
-        headers: new HttpHeaders()
-          .set('Content-Type', 'application/json')
-          .set('Authorization', `Bearer ${this.bearer}`),
-      }
-    );
-  }
-
-/**
- * Filters the list of qualifications based on the current search query.
- *
- * This method updates `filteredQualifications$` with qualifications whose
- * `skill` property contains the search query, ignoring case differences.
- */
+  /**
+   * Filters the list of qualifications based on the current search query.
+   *
+   * This method updates `filteredQualifications$` with qualifications whose
+   * `skill` property contains the search query, ignoring case differences.
+   */
   searchQualification() {
     this.filteredQualifications$ = this.qualifications$.pipe(
       map((qualifications) =>
@@ -77,101 +67,17 @@ export class QualificationViewComponent {
   }
 
   updateView() {
-    this.fetchData();
     setTimeout(() => {
       this.isLoading = false;
     }, 500);
   }
 
-  // TODO: refactor request chain with concatMap or similar function https://www.learnrxjs.io/learn-rxjs/operators/transformation/concatmap
-
   /**
-   * Deletes a qualification from the database and removes it from all employees.
-   * @param qualification The qualification to be deleted
-   */
-  deleteQualification(qualification: Qualification) {
-    // 1. alle Mitarbeiter mit dieser Qualifikation holen
-    this.getEmployeesByQualification(qualification).subscribe({
-      next: (data: QualificationEmployeesDTO) => {
-        let employeeCollection = data.employees;
-        employeeCollection.forEach((employee) => {
-          this.deleteQualificationFromEmployee(employee, qualification);
-        });
-        setTimeout(() => {
-          this.deleteQualificationEntity(qualification);
-        }, 200);
-      },
-      error: (error: any) => {},
-    });
-  }
-
-  /**
-   * Retrieves a list of employees associated with a specific qualification.
+   * Opens a confirmation modal when deleting a qualification, and deletes the
+   * qualification if the user confirms.
    *
-   * @param qualification - The qualification for which to retrieve associated employees.
-   * @returns An observable of QualificationEmployeesDTO containing the qualification and the list of associated employees.
+   * @param qualification The qualification to be deleted.
    */
-  getEmployeesByQualification(qualification: Qualification) {
-    let response$ = this.http.get<QualificationEmployeesDTO>(
-      `http://localhost:8089/qualifications/${qualification.id}/employees`,
-      {
-        headers: new HttpHeaders()
-          .set('Content-Type', 'application/json')
-          .set('Authorization', `Bearer ${this.bearer}`),
-      }
-    );
-    return response$;
-  }
-
-  deleteQualificationFromEmployee(
-    employee: Employee,
-    qualification: Qualification
-  ) {
-    let response = this.http
-      .delete(
-        `http://localhost:8089/employees/${employee.id}/qualifications/${qualification.id}`,
-        {
-          headers: new HttpHeaders()
-            .set('Content-Type', 'application/json')
-            .set('Authorization', `Bearer ${this.bearer}`),
-        }
-      )
-      .subscribe({
-        next: (response) => {
-          console.log(
-            `Deleted qualification "${qualification.skill}" [ID: ${qualification.id}] from employee "${employee.lastName}, ${employee.firstName}" [ID: ${employee.id}] `
-          );
-        },
-        error: (response) => {
-          console.error(
-            `Could not delete qualification "${qualification.skill}" [ID: ${qualification.id}] from employee "${employee.lastName}, ${employee.firstName}" [ID: ${employee.id}]`
-          );
-        },
-      });
-    return response;
-  }
-
-  deleteQualificationEntity(qualification: Qualification) {
-    this.http
-      .delete(`http://localhost:8089/qualifications/${qualification.id}`, {
-        headers: new HttpHeaders()
-          .set('Content-Type', 'application/json')
-          .set('Authorization', `Bearer ${this.bearer}`),
-      })
-      .subscribe({
-        next: (data) => {
-          console.log(
-            `Deleted qualification "${qualification.skill}" [ID: ${qualification.id}]`
-          );
-        },
-        error: (err) => {
-          console.error(
-            `Could not delete qualification id "${qualification.skill}" [ID: ${qualification.id}]. Maybe it is assigned to an employee?`
-          );
-        },
-      });
-  }
-
   openDeleteQualificationModal(qualification: Qualification) {
     const dialogRef = this.dialog.open(ConfirmationModalComponent, {
       data: {
@@ -181,16 +87,21 @@ export class QualificationViewComponent {
     dialogRef.afterClosed().subscribe((result) => {
       console.log(`Dialog result: ${result}`);
       if (result == true) {
-        this.deleteQualification(qualification);
+        this.qualificationService
+          .deleteQualification(qualification)
+          .subscribe((result) => {});
         this.isLoading = true;
-        this.fetchData();
         this.updateView();
-        this.toastr.success(`Qualifikation "${qualification.skill}" [ID: ${qualification.id}] wurde erfolgreich gelöscht. `, "Erfolgreich!", {
-          timeOut: 3000,
-          closeButton: true,
-          progressBar: true,
-          positionClass: "toast-bottom-center"
-        });
+        this.toastr.success(
+          `Qualifikation "${qualification.skill}" [ID: ${qualification.id}] wurde erfolgreich gelöscht. `,
+          'Löschen erfolgreich!',
+          {
+            timeOut: 3000,
+            closeButton: true,
+            progressBar: true,
+            positionClass: 'toast-bottom-center',
+          }
+        );
       }
     });
   }
