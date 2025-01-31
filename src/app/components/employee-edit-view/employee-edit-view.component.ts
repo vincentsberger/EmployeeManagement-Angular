@@ -26,9 +26,9 @@ export class EmployeeEditViewComponent implements OnInit {
     employeeForm: FormGroup;
     employeeId: string | null = null;
 
-    deletedSkills: string[] = [];
+  deletedSkills: { id: number; skill: string }[] = [];
 
-    constructor(
+  constructor(
         private fb: FormBuilder,
         private http: HttpClient,
         private route: ActivatedRoute,
@@ -90,16 +90,27 @@ export class EmployeeEditViewComponent implements OnInit {
         return this.employeeForm.get('qualifications') as FormArray;
     }
 
-    addSkill() {
-        const newSkillValue = this.employeeForm.get('newSkill')?.value.trim();
-        if (!newSkillValue) {
-            alert('Der Name der Qualifikation darf nicht leer sein.');
-            return;
-        }
-        this.checkIfQualificationExists(newSkillValue);
+  addSkill() {
+    const newSkillValue = this.employeeForm.get('newSkill')?.value.trim();
+    if (!newSkillValue) {
+      alert('Der Name der Qualifikation darf nicht leer sein.');
+      return;
     }
 
-    private async checkIfQualificationExists(skill: string): Promise<void> {
+    const deletedSkillIndex = this.deletedSkills.findIndex(q => q.skill.toLowerCase() === newSkillValue.toLowerCase());
+
+    if (deletedSkillIndex !== -1) {
+      const restoredSkill = this.deletedSkills[deletedSkillIndex];
+      this.qualifications.push(this.fb.group({ id: restoredSkill.id, skill: restoredSkill.skill }));
+      this.deletedSkills.splice(deletedSkillIndex, 1);
+    } else {
+      this.checkIfQualificationExists(newSkillValue);
+    }
+
+    this.employeeForm.get('newSkill')?.setValue('');
+  }
+
+  private async checkIfQualificationExists(skill: string): Promise<void> {
         try {
             const qualifications = await firstValueFrom(this.http
                 .get<any[]>(`http://localhost:8089/qualifications`, {headers: this.headers})
@@ -165,7 +176,7 @@ export class EmployeeEditViewComponent implements OnInit {
         const skillControl = this.qualifications.controls.find(control => control.value.skill === skill);
         if (!skillControl) return;
 
-        this.deletedSkills.push(skill);
+        this.deletedSkills.push(skillControl.value);
 
         const skillIndex = this.qualifications.controls.findIndex(control => control.value.skill === skill);
         if (skillIndex !== -1) {
