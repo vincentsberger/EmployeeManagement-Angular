@@ -1,0 +1,16 @@
+<app-drawer #drawer title="Neues Item hinzufügen" (save)="addItem()">
+  <form>
+    <mat-form-field appearance="fill" style="width: 100%;">
+      <mat-label>Name</mat-label>
+      <input matInput [(ngModel)]="newItem.name" name="name" required />
+    </mat-form-field>
+  </form>
+</app-drawer>
+
+<button mat-fab color="primary" (click)="drawer.open()">
+  <mat-icon>add</mat-icon>
+</button>
+
+<ul>
+  <li *ngFor="let item of items">{{ item.name }}</li>
+</ul>

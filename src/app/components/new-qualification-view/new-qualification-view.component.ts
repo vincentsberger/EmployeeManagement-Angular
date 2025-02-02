@@ -51,7 +51,7 @@ export class NewQualificationViewComponent {
       ApiRoutes.QUALIFICATIONS, payload)
       .subscribe({
         next: (qualification: Qualification) => {
-          this.messageService.showSuccess(`Qualifikation ${qualification.skill} erfolgreich hinzugefügt!`, "Hinzufügen erfolgreich!");
+          this.messageService.showSuccess(`Qualifikation "${qualification.skill}" erfolgreich hinzugefügt!`, "Hinzufügen erfolgreich!");
           this.qualificationService.fetchQualifications();
           this.router.navigate(['/qualifications']);
         },
