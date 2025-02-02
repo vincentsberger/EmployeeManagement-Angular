@@ -1,11 +1,11 @@
 <app-main-view>
-  <div
+  <!-- <div
     class="container w-100 d-flex justify-content-center align-items-center"
     *ngIf="isLoading == true"
   >
     <mat-spinner></mat-spinner>
-  </div>
-  <div class="container" *ngIf="isLoading == false">
+  </div> -->
+  <div class="container">
       <h1>Qualifikationsliste</h1>
 
     <div class="mb-3">
@@ -20,7 +20,7 @@
 
   <div class="list-group">
       <div
-        *ngFor="let qualification of filteredQualifications$ | async; let last = last"
+        *ngFor="let qualification of this.qualificationService.qualifications$ | async; let last = last"
       >
         <div
           class="list-group-item d-flex justify-content-between align-items-center border-0"

@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { ToastrService } from 'ngx-toastr';
 import { QualificationService } from '../../service/qualification.service';
+import { MessageService } from '../../service/message.service';
 
 @Component({
   selector: 'app-qualification-view',
@@ -31,7 +32,6 @@ import { QualificationService } from '../../service/qualification.service';
   styleUrl: './qualification-view.component.scss',
 })
 export class QualificationViewComponent {
-  isLoading = true;
   keycloak = inject(Keycloak);
   bearer = this.keycloak.token;
   readonly dialog = inject(MatDialog);
@@ -41,11 +41,11 @@ export class QualificationViewComponent {
 
   constructor(
     private toastr: ToastrService,
-    private qualificationService: QualificationService
+    protected qualificationService: QualificationService,
+    protected messageService: MessageService
   ) {
     this.qualifications$ = this.qualificationService.getQualifications();
     this.filteredQualifications$ = this.qualifications$;
-    this.updateView();
   }
 
   /**
@@ -55,22 +55,24 @@ export class QualificationViewComponent {
    * `skill` property contains the search query, ignoring case differences.
    */
   searchQualification() {
-    this.filteredQualifications$ = this.qualifications$.pipe(
-      map((qualifications) =>
-        qualifications.filter((qualification) =>
-          qualification.skill
-            ?.toLowerCase()
-            .includes(this.searchQuery.toLowerCase())
+    this.filteredQualifications$ = this.qualificationService
+      .getQualifications()
+      .pipe(
+        map((qualifications) =>
+          qualifications.filter((qualification) =>
+            qualification.skill
+              ?.toLowerCase()
+              .includes(this.searchQuery.toLowerCase())
+          )
         )
-      )
-    );
+      );
   }
 
-  updateView() {
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
-  }
+  // updateView() {
+  //   setTimeout(() => {
+  //     this.isLoading = false;
+  //   }, 500);
+  // }
 
   /**
    * Opens a confirmation modal when deleting a qualification, and deletes the
@@ -85,23 +87,16 @@ export class QualificationViewComponent {
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
       if (result == true) {
-        this.qualificationService
-          .deleteQualification(qualification)
-          .subscribe((result) => {});
-        this.isLoading = true;
-        this.updateView();
-        this.toastr.success(
-          `Qualifikation "${qualification.skill}" [ID: ${qualification.id}] wurde erfolgreich gelöscht. `,
-          'Löschen erfolgreich!',
-          {
-            timeOut: 3000,
-            closeButton: true,
-            progressBar: true,
-            positionClass: 'toast-bottom-center',
-          }
-        );
+        this.qualificationService.deleteQualification(qualification).subscribe({
+          next: () => {
+            this.messageService.showSuccess(
+              `Qualifikation ${qualification.skill} wurde erfolgreich gelöscht!`,
+              'Löschen erfolgreich!'
+            );
+          },
+        });
+        this.qualificationService.fetchQualifications();
       }
     });
   }
