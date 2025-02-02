@@ -7,4 +7,11 @@ export class Employee {
               public city?: string,
               public phone?: string) {
   }
+  /**
+   * Returns the full name of the employee.
+   * @returns {string} The first name, a space, and the last name.
+   */
+  get fullname(): string {
+    return this.firstName + " " + this.lastName;
+  }
 }

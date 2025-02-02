@@ -1,7 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { Employee } from '../model/Employee';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import Keycloak from 'keycloak-js';
 import { QualificationEmployeesDTO } from '../model/DTO/qualification-employees-dto';
 import { Qualification } from '../model/Qualification';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
@@ -14,29 +12,27 @@ import { LoggingService } from './logging.service';
   providedIn: 'root',
 })
 export class EmployeeService {
-  keycloak = inject(Keycloak);
-  bearer = this.keycloak.token;
-  private _employeesSubject = new BehaviorSubject<Employee[]>([]);
-  readonly employees$ = this._employeesSubject.asObservable();
+  private employeesSubject = new BehaviorSubject<Employee[]>([]);
+  readonly employees$ = this.employeesSubject.asObservable();
   protected logger$ = inject(LoggingService);
 
-  constructor(
-    private httpClient: HttpClient,
-    private apiService: ApiService,
-    private loggingService: LoggingService
-  ) {}
+  constructor(private apiService: ApiService) {
+    this.fetchEmployees();
+  }
 
   /**
-   * Retrieves a list of all employees.
+   * Fetches the list of all employees from the backend.
    *
-   * @returns An observable of a list of employees.
+   * This method sends a GET request to the backend, and updates the
+   * `employees$` observable with the response. The response is expected
+   * to be an array of `Employee` objects.
    */
-  public fetchEmployees(): Observable<Employee[]> {
-    return this.httpClient.get<Employee[]>(`http://localhost:8089/employees`, {
-      headers: new HttpHeaders()
-        .set('Content-Type', 'application/json')
-        .set('Authorization', `Bearer ${this.bearer}`),
-    });
+  public fetchEmployees(): void {
+    this.apiService
+      .sendGetRequest<Employee[]>(ApiRoutes.EMPLOYEES)
+      .subscribe((data: Employee[]): void => {
+        this.employeesSubject.next(data);
+      });
   }
 
   /**
@@ -51,19 +47,15 @@ export class EmployeeService {
   }
 
   /**
-   * Retrieves a single employee by their ID.
+   * Retrieves an employee by their ID.
    *
    * @param employeeId - The ID of the employee to retrieve.
-   * @returns An observable of the employee.
+   * @returns An observable of the retrieved employee.
    */
+
   public getEmployeeById(employeeId: number): Observable<Employee> {
-    return this.httpClient.get<Employee>(
-      `http://localhost:8089/employees/${employeeId}`,
-      {
-        headers: new HttpHeaders()
-          .set('Content-Type', 'application/json')
-          .set('Authorization', `Bearer ${this.bearer}`),
-      }
+    return this.apiService.sendGetRequest<Employee>(
+      `${ApiRoutes.QUALIFICATIONS}/${employeeId}`
     );
   }
 
@@ -86,21 +78,19 @@ export class EmployeeService {
   }
 
   /**
-   * Creates a new employee in the database.
+   * Adds a new employee.
    *
-   * @param employeeDTO - The data transfer object of the employee to add.
-   * @returns An observable of the newly created employee.
+   * @param newEmployee - The employee data to add.
+   * @returns An observable of the newly added employee.
    */
-  public addEmployee(employeeDTO: PostEmployeeDTO) {
-    return this.httpClient.post<PostEmployeeDTO>(
-      `http://localhost:8089/employees`,
-      employeeDTO,
-      {
-        headers: new HttpHeaders()
-          .set('Content-Type', 'application/json')
-          .set('Authorization', `Bearer ${this.bearer}`),
-      }
-    );
+  public addEmployee(newEmployee: PostEmployeeDTO): Observable<Employee> {
+    return this.apiService
+      .sendPostRequest<Employee>(ApiRoutes.EMPLOYEES, newEmployee)
+      .pipe(
+        tap((employee: Employee): void => {
+          this.logger$.debug('Mitarbeiter hinzugefügt!', employee);
+        })
+      );
   }
 
   // PUT
@@ -113,14 +103,13 @@ export class EmployeeService {
    * @returns An observable of the deleted employee.
    */
   public deleteEmployee(employee: Employee) {
-    return this.httpClient.delete<Qualification>(
-      `http://localhost:8089/employees/${employee.id}`,
-      {
-        headers: new HttpHeaders()
-          .set('Content-Type', 'application/json')
-          .set('Authorization', `Bearer ${this.bearer}`),
-      }
-    );
+    return this.apiService
+      .sendDeleteRequest<never>(`${ApiRoutes.EMPLOYEES}/${employee.id}`)
+      .pipe(
+        tap((): void => {
+          this.logger$.debug('Mitarbeiter gelöscht', employee);
+        })
+      );
   }
 
   /**
@@ -140,7 +129,10 @@ export class EmployeeService {
       )
       .pipe(
         tap(() =>
-          this.logger$.debug(`Qualifikation aus Mitarbeiter entfernt.`, {qualification, employee})
+          this.logger$.debug(`Qualifikation aus Mitarbeiter entfernt.`, {
+            qualification,
+            employee,
+          })
         )
       );
   }

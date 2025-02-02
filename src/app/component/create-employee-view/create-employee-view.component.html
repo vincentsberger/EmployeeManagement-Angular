@@ -1,0 +1,99 @@
+<section>
+  <div class="container">
+    <form [formGroup]="employeeForm">
+      <div class="formfield d-flex justify-content-start gap-3 flex-wrap align-items-center">
+        <div class="inputfield">
+          <label for="firstName">Vorname</label>
+          <input
+            class="form-control rounded-pill mb-2"
+            id="firstName"
+            formControlName="firstName"
+            type="text"
+          />
+
+          <label for="lastName">Nachname</label>
+          <input
+            class="form-control rounded-pill mb-2"
+            id="lastName"
+            formControlName="lastName"
+            type="text"
+          />
+
+          <label for="phone">Telefonnummer</label>
+          <input
+            class="form-control rounded-pill mb-2"
+            id="phone"
+            formControlName="phone"
+            type="text"
+          />
+        </div>
+
+        <div class="inputfield">
+          <label for="street">Straße und Hausnummer</label>
+          <input
+            class="form-control rounded-pill mb-2"
+            id="street"
+            formControlName="street"
+            type="text"
+          />
+
+          <label for="city">Stadt</label>
+          <input
+            class="form-control rounded-pill mb-2"
+            id="city"
+            formControlName="city"
+            type="text"
+          />
+
+          <label for="postcode">Postleitzahl</label>
+          <input
+            class="form-control rounded-pill mb-2"
+            id="postcode"
+            formControlName="postcode"
+            type="text"
+          />
+        </div>
+      </div>
+
+      <h5 class="container">Qualifikationen</h5>
+      <div class="container">
+        <mat-form-field appearance="fill">
+          <mat-select
+            id="qualificationSelect"
+            name="qualificationSelect"
+            [(value)]="selectedItems"
+            multiple
+            placeholder="Qualifikationen"
+            (selectionChange)="onSelectionChange($event)"
+          >
+            <!-- Options -->
+            <mat-option
+              *ngFor="let qualification of qualifications$ | async"
+              value="{{ qualification.id }}"
+            >
+              {{ qualification.skill }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="container mt-3">
+        <button
+          class="btn text-primary btn-outline-secondary me-4"
+          type="submit"
+          [disabled]="!employeeForm.valid"
+          (click)="saveEmployee()"
+        >
+          Speichern
+        </button>
+        <button
+          class="btn text-danger btn-outline-secondary me-2"
+          type="button"
+          (click)="cancel()"
+        >
+          Abbrechen
+        </button>
+      </div>
+    </form>
+  </div>
+</section>

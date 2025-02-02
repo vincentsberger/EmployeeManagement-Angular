@@ -1,15 +1,27 @@
 import { Injectable } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
+import { IndividualConfig, ToastrConfig, ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MessageService {
-  private toastOptions = {
-    timeOut: 5000,
+  private toastOptions: IndividualConfig = {
+    timeOut: 3000,
     closeButton: true,
     progressBar: true,
     positionClass: 'toast-bottom-center',
+    easing: 'ease-in-out',
+    disableTimeOut: false,
+    extendedTimeOut: 1000,
+    progressAnimation: 'decreasing',
+    enableHtml: false,
+    toastClass: 'ngx-toastr',
+    titleClass: 'toast-title',
+    messageClass: 'toast-message',
+    easeTime: 1000,
+    tapToDismiss: true,
+    onActivateTick: false,
+    newestOnTop: true,
   };
 
   constructor(private toastrService: ToastrService) {}

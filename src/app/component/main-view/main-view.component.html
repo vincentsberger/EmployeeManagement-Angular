@@ -1,0 +1,44 @@
+<div>
+  <header class="container-fluid py-3 shadow mb-5">
+    <nav
+      class="container px-3 d-flex flex-row justify-content-between align-items-center"
+    >
+      <div>
+        <img src="/img/logo.jpg" width="150" />
+      </div>
+      <ul class="nav justify-content-center align-items-center">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/">Home</a>
+        </li>
+        <li>
+          <a class="nav-link" routerLink="/employees">Mitarbeiter</a>
+        </li>
+        <li>
+          <a class="nav-link" routerLink="/qualifications">Qualifikationen</a>
+        </li>
+      </ul>
+      <div class="d-flex flex-row gap-3">
+        <button
+          (click)="logout()"
+          class="btn btn-danger h-50 d-flex flex-row gap-1 justify-content-center align-items-center"
+        >
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+        <div class="d-flex align-items-center justify-content-center gap-1">
+          <mat-icon>light_mode</mat-icon>
+          <mat-slide-toggle
+            hideIcon="true"
+            [checked]="isDarkMode"
+            (click)="toggleDarkMode()"
+          ></mat-slide-toggle>
+          <mat-icon>dark_mode</mat-icon>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main class="container-fluid">
+    <app-drawer-panel></app-drawer-panel>
+    <ng-content></ng-content>
+  </main>
+</div>

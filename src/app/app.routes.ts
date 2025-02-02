@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
-import { EmployeeListComponent } from './components/employee-list/employee-list.component';
-import { HomeViewComponent } from './components/home-view/home-view.component';
-import {QualificationViewComponent} from "./components/qualification-view/qualification-view.component";
-import {NewQualificationViewComponent} from "./components/new-qualification-view/new-qualification-view.component";
+import { EmployeeListComponent } from './component/employee-list/employee-list.component';
+import { HomeViewComponent } from './component/home-view/home-view.component';
+import {QualificationViewComponent} from "./component/qualification-view/qualification-view.component";
+import {NewQualificationViewComponent} from "./component/new-qualification-view/new-qualification-view.component";
 import { canActivateAuthRole } from './guards/auth-role.guard';
-import { HomeServicesViewComponent } from './components/home-services-view/home-services-view.component';
-import {EmployeeDetailViewComponent} from "./components/employee-detail-view/employee-detail-view.component";
-import {CreateEmployeeViewComponent} from "./components/create-employee-view/create-employee-view.component";
-import {EmployeeEditViewComponent} from "./components/employee-edit-view/employee-edit-view.component";
+import { HomeServicesViewComponent } from './component/home-services-view/home-services-view.component';
+import {EmployeeDetailViewComponent} from "./component/employee-detail-view/employee-detail-view.component";
+import {CreateEmployeeViewComponent} from "./component/create-employee-view/create-employee-view.component";
+import {EmployeeEditViewComponent} from "./component/employee-edit-view/employee-edit-view.component";
 
 export const routes: Routes = [
   { path: "", component: HomeServicesViewComponent},

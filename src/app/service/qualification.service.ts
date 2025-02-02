@@ -1,17 +1,11 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Qualification } from '../model/Qualification';
-import Keycloak from 'keycloak-js';
 import {
   BehaviorSubject,
-  catchError,
-  concatMap,
-  count,
   finalize,
   forkJoin,
-  from,
+  map,
   Observable,
-  retry,
   switchMap,
   tap,
 } from 'rxjs';
@@ -19,8 +13,10 @@ import { Employee } from '../model/Employee';
 import { EmployeeService } from './employee.service';
 import { ApiService } from './api.service';
 import { ApiRoutes } from '../enums/api-routes';
-import { ErrorHandlerService } from './error-handler.service';
 import { LoggingService } from './logging.service';
+import { PostQualificationDTO } from '../model/DTO/post-qualification-dto';
+import { QualificationEmployeesDTO } from '../model/DTO/qualification-employees-dto';
+import { EmployeeQualitificationsDTO } from '../model/DTO/employee-qualifications-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -70,34 +66,52 @@ export class QualificationService {
     );
   }
 
+/**
+ * Retrieves the list of qualifications associated with a specific employee.
+ *
+ * This method sends a GET request to the backend to fetch qualifications
+ * linked to the given employee ID. The response is expected to be an
+ * `EmployeeQualitificationsDTO` object, and the `skillSet` is mapped
+ * to an array of `Qualification` objects.
+ *
+ * @param employeeId - The ID of the employee for whom to retrieve qualifications.
+ * @returns An observable of an array of `Qualification` objects associated with the employee.
+ */
+  public getQualificationsByEmployeeId(employeeId: number): Observable<Qualification[]> {
+    return this.apiService.sendGetRequest<EmployeeQualitificationsDTO>(`${ApiRoutes.EMPLOYEES}/${employeeId}/${ApiRoutes.QUALIFICATIONS}`)
+          .pipe(
+            map((data: EmployeeQualitificationsDTO): Qualification[] => data.skillSet)
+          );
+  }
+
+
   /**
    * Adds a new qualification to the backend.
    *
-   * This method sends a POST request to the backend with the provided
-   * `postBody`, and updates the `qualifications$` observable with the
-   * response. The response is expected to be a single `Qualification`
-   * object.
+   * This method sends a POST request to the backend with the new qualification
+   * information. The response is expected to be a `Qualification` object, which
+   * is then logged to the console.
    *
-   * @param newQualification - The `Qualification` object that should be added.
-   * @param postBody - The body of the POST request.
+   * @param newQualification - The `PostQualificationDTO` object containing the
+   * information for the new qualification.
+   * @returns An observable of the added `Qualification`.
    */
-  public addQualification(newQualification: Qualification): void {
-    this.apiService
+  public addQualification(
+    newQualification: PostQualificationDTO
+  ): Observable<Qualification> {
+    return this.apiService
       .sendPostRequest<Qualification>(
         ApiRoutes.QUALIFICATIONS,
         newQualification
       )
-      .subscribe((qualification: Qualification): void => {
-        this.logger$.debug(
-          'Qualifikation erfolgreich hinzugefügt!',
-          qualification
-        );
-        this.fetchQualifications();
-      });
+      .pipe(
+        tap((qualification: Qualification): void => {
+          this.logger$.debug('Qualifikation hinzugefügt!', qualification);
+        })
+      );
   }
 
   public updateQualification(qualification: Qualification) {}
-
 
   /**
    * Deletes a qualification from the backend.
@@ -112,7 +126,7 @@ export class QualificationService {
    */
   public deleteQualification(
     qualification: Qualification
-  ): Observable<Qualification> | any {
+  ): Observable<Qualification> {
     // Schritt 1: Überprüfen, ob die Qualifikation Mitarbeitern zugeordnet ist
     return this.employeeService
       .getEmployeesByQualificationId(qualification.id)
