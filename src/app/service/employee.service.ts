@@ -52,7 +52,6 @@ export class EmployeeService {
    * @param employeeId - The ID of the employee to retrieve.
    * @returns An observable of the retrieved employee.
    */
-
   public getEmployeeById(employeeId: number): Observable<Employee> {
     return this.apiService.sendGetRequest<Employee>(
       `${ApiRoutes.QUALIFICATIONS}/${employeeId}`
@@ -125,7 +124,7 @@ export class EmployeeService {
   ): Observable<Employee> {
     return this.apiService
       .sendDeleteRequest<Employee>(
-        `${ApiRoutes.EMPLOYEES}/${employee.id}/qualifications/${qualification.id}`
+        `${ApiRoutes.EMPLOYEES}/${employee.id}/${ApiRoutes.QUALIFICATIONS}/${qualification.id}`
       )
       .pipe(
         tap(() =>

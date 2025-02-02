@@ -22,7 +22,7 @@ export class EmployeeDetailViewComponent implements OnInit {
   private keycloak = inject(Keycloak);
   private bearer = this.keycloak.token;
 
-  employee$: Observable<Employee | null>;
+  employee$: Observable<Employee>;
   qualifications$: Observable<Qualification[]>;
 
   constructor(
@@ -32,10 +32,17 @@ export class EmployeeDetailViewComponent implements OnInit {
     private qualificationService: QualificationService
   ) {
     this.employee$ = this.route.paramMap.pipe(
-      switchMap((params) => this.employeeService.getEmployeeById(Number(params.get('id'))))
+      switchMap((params) =>
+        this.employeeService.getEmployeeById(Number(params.get('id')))
+      )
     );
     this.qualifications$ = this.route.paramMap.pipe(
-      switchMap((params): Observable<Qualification[]> => this.qualificationService.getQualificationsByEmployeeId(Number(params.get('id'))))
+      switchMap(
+        (params): Observable<Qualification[]> =>
+          this.qualificationService.getQualificationsByEmployeeId(
+            Number(params.get('id'))
+          )
+      )
     );
   }
 

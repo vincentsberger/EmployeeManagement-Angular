@@ -2,19 +2,17 @@ import Keycloak from 'keycloak-js';
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Employee } from '../../model/Employee';
 import { MainViewComponent } from '../main-view/main-view.component';
 import { FormsModule } from '@angular/forms';
 import { map } from 'rxjs/operators';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { EmployeeService } from '../../service/employee.service';
 import { DrawerService } from '../../service/drawer.service';
 import { CreateEmployeeViewComponent } from '../create-employee-view/create-employee-view.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from '../modal/confirmation-modal/confirmation-modal.component';
-import { QualificationService } from '../../service/qualification.service';
 import { MessageService } from '../../service/message.service';
 
 @Component({
@@ -39,11 +37,8 @@ export class EmployeeListComponent {
   };
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
     private employeeService: EmployeeService,
     private drawerService: DrawerService,
-    private qualificationService: QualificationService,
     private messageService: MessageService
   ) {
     this.employees$ = this.employeeService.getEmployees();
@@ -80,6 +75,12 @@ export class EmployeeListComponent {
     this.searchEmployees();
   }
 
+  /**
+   * Opens a confirmation modal to confirm the deletion of an employee.
+   * When the modal is confirmed, the employee is deleted and a success message is shown.
+   * The employee list is refetched after deletion.
+   * @param employee The employee to be deleted.
+   */
   openDeleteQualificationModal(employee: Employee) {
     const dialogRef = this.dialog.open(ConfirmationModalComponent, {
       data: {
