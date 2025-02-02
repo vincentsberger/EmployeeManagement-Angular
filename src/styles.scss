@@ -38,29 +38,30 @@ body {
 }
 
 :root {
-  --fab-bg-color: #b6b6b6;
+  // --fab-bg-color: #b6b6b6
+  --fab-bg-color: blue;
   --fab-icon-color: #000000;
   --fab-hover-bg-color: #d1d1d1;
 }
 
 [data-bs-theme="dark"] {
-  --fab-bg-color: #ffffff;
+  --fab-bg-color: #ffffff
   --fab-icon-color: #000000;
   --fab-hover-bg-color: #d1d1d1;
 }
 
-.fab {
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
-  background-color: var(--fab-bg-color);
-  color: var(--fab-icon-color);
-  border: none;
-  transition: background-color 0.3s, transform 0.2s;
-}
+// .fab {
+//   width: 64px;
+//   height: 64px;
+//   border-radius: 16px;
+//   background-color: var(--fab-bg-color);
+//   color: var(--fab-icon-color);
+//   border: none;
+//   transition: background-color 0.3s, transform 0.2s;
+// }
 
 .fab:hover {
-  background-color: var(--fab-hover-bg-color);
+  // background-color: var(--fab-hover-bg-color);
   transform: scale(1.1);
 }
 
