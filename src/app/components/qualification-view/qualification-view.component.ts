@@ -34,8 +34,6 @@ import { NewQualificationViewComponent } from '../new-qualification-view/new-qua
   styleUrl: './qualification-view.component.scss',
 })
 export class QualificationViewComponent {
-  keycloak = inject(Keycloak);
-  bearer = this.keycloak.token;
   readonly dialog = inject(MatDialog);
   qualifications$: Observable<Qualification[]>;
   filteredQualifications$: Observable<Qualification[]>;
@@ -74,7 +72,7 @@ export class QualificationViewComponent {
   }
 
   openDrawer() {
-    this.drawerService.open(AddItemFormComponent, {
+    this.drawerService.open(NewQualificationViewComponent, {
       title: 'Qualifikation hinzufügen',
       save: (value: string) => this.items.push(value)
     });

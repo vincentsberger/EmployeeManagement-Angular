@@ -11,6 +11,7 @@ import { Qualification } from '../../model/Qualification';
 import { ApiRoutes } from '../../enums/api-routes';
 import { ApiService } from '../../service/api.service';
 import { NEVER } from 'rxjs';
+import { DrawerService } from '../../service/drawer.service';
 
 @Component({
   selector: 'app-new-qualification-view',
@@ -30,7 +31,8 @@ export class NewQualificationViewComponent {
     private qualificationService: QualificationService,
     private messageService: MessageService,
     private loggingService: LoggingService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private drawerService: DrawerService,
   ) {}
 
   saveQualification() {
@@ -43,8 +45,6 @@ export class NewQualificationViewComponent {
       return;
     }
 
-    console.debug("Qualifikation:", this.qualificationName);
-
     const payload = { skill: this.qualificationName };
 
     this.apiService.sendPostRequest<Qualification>(
@@ -53,12 +53,13 @@ export class NewQualificationViewComponent {
         next: (qualification: Qualification) => {
           this.messageService.showSuccess(`Qualifikation "${qualification.skill}" erfolgreich hinzugefügt!`, "Hinzufügen erfolgreich!");
           this.qualificationService.fetchQualifications();
-          this.router.navigate(['/qualifications']);
+          this.drawerService.close();
         },
       });
+
   }
 
   cancel() {
-    this.router.navigate(['/qualifications']);
+    this.drawerService.close();
   }
 }

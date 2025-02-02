@@ -50,7 +50,6 @@ export class DrawerPanelComponent implements OnDestroy, AfterViewInit {
       ({ open, component, data }) => {
         this.title = data?.title;
         this.isOpen = open;
-        console.debug(component);
         if (open && component) {
           if (this.container) {
             this.loadComponent(component, data);
@@ -81,13 +80,11 @@ export class DrawerPanelComponent implements OnDestroy, AfterViewInit {
   }
 
   private loadComponent(component: Type<any>, data?: any) {
-    console.log('Lade Komponente:', component); // 🔍 Komponente wird geladen
     this.clearComponent(); // Vorherige Komponente entfernen
     const componentRef = this.container.createComponent(component);
 
     if (data) {
       Object.assign(componentRef.instance, data);
-      console.log(data);
     }
   }
 

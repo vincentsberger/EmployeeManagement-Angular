@@ -1,7 +1,4 @@
-<app-main-view>
-<div class="container mt-5">
-  <h2>Neue Qualifikation hinzufügen</h2>
-
+<div class="container">
   <form>
     <div class="mb-3">
       <label for="qualificationName" class="form-label"></label>
@@ -10,21 +7,24 @@
         id="qualificationName"
         class="form-control"
         [(ngModel)]="qualificationName"
-        [ngModelOptions]="{standalone: true}"
+        [ngModelOptions]="{ standalone: true }"
         placeholder="Qualifikationsname eingeben"
         required
+        (keyup.enter)="saveQualification()"
       />
     </div>
 
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-end gap-3">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="saveQualification()"
+      >
+        Speichern
+      </button>
       <button type="button" class="btn btn-secondary me-2" (click)="cancel()">
         Abbrechen
-      </button>
-
-      <button type="button" class="btn btn-primary" (click)="saveQualification()">
-        Speichern
       </button>
     </div>
   </form>
 </div>
-  </app-main-view>
