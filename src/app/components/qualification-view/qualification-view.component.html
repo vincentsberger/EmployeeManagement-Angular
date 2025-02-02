@@ -1,4 +1,5 @@
 <app-main-view>
+  <app-drawer-panel></app-drawer-panel>
   <!-- <div
     class="container w-100 d-flex justify-content-center align-items-center"
     *ngIf="isLoading == true"
@@ -46,7 +47,7 @@
 
     <button
       class="fab btn position-fixed bottom-0 end-0 m-4 d-flex align-items-center justify-content-center shadow"
-      routerLink="/new-qualification"
+      (click)="openDrawer()"
     >
       <i class="bi bi-plus-lg"></i>
     </button>

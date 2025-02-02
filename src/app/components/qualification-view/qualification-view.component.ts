@@ -2,7 +2,6 @@ import { Qualification } from './../../model/Qualification';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { map, Observable, of } from 'rxjs';
-import { RouterLink } from '@angular/router';
 import { MainViewComponent } from '../main-view/main-view.component';
 import Keycloak from 'keycloak-js';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -11,23 +10,26 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
-import { ToastrService } from 'ngx-toastr';
 import { QualificationService } from '../../service/qualification.service';
 import { MessageService } from '../../service/message.service';
+import { DrawerService } from '../../service/drawer.service';
+import { AddItemFormComponent } from '../add-item-form/add-item-form.component';
+import { DrawerPanelComponent } from "../drawer-panel/drawer-panel.component";
+import { NewQualificationViewComponent } from '../new-qualification-view/new-qualification-view.component';
 
 @Component({
   selector: 'app-qualification-view',
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     MainViewComponent,
     ReactiveFormsModule,
     FormsModule,
     MatDialogModule,
     MatProgressSpinnerModule,
     MatIcon,
-  ],
+    DrawerPanelComponent
+],
   templateUrl: './qualification-view.component.html',
   styleUrl: './qualification-view.component.scss',
 })
@@ -39,10 +41,13 @@ export class QualificationViewComponent {
   filteredQualifications$: Observable<Qualification[]>;
   searchQuery: string = '';
 
+  // test
+  items: string[] = [];
+
   constructor(
-    private toastr: ToastrService,
     protected qualificationService: QualificationService,
-    protected messageService: MessageService
+    protected messageService: MessageService,
+    protected drawerService: DrawerService
   ) {
     this.qualifications$ = this.qualificationService.getQualifications();
     this.filteredQualifications$ = this.qualifications$;
@@ -68,6 +73,13 @@ export class QualificationViewComponent {
       );
   }
 
+  openDrawer() {
+    this.drawerService.open(AddItemFormComponent, {
+      title: 'Qualifikation hinzufügen',
+      save: (value: string) => this.items.push(value)
+    });
+  }
+
   // updateView() {
   //   setTimeout(() => {
   //     this.isLoading = false;
@@ -91,7 +103,7 @@ export class QualificationViewComponent {
         this.qualificationService.deleteQualification(qualification).subscribe({
           next: () => {
             this.messageService.showSuccess(
-              `Qualifikation ${qualification.skill} wurde erfolgreich gelöscht!`,
+              `Qualifikation "${qualification.skill}" wurde erfolgreich gelöscht!`,
               'Löschen erfolgreich!'
             );
           },
