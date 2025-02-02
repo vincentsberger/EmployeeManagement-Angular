@@ -54,7 +54,7 @@ export class EmployeeService {
    */
   public getEmployeeById(employeeId: number): Observable<Employee> {
     return this.apiService.sendGetRequest<Employee>(
-      `${ApiRoutes.QUALIFICATIONS}/${employeeId}`
+      `${ApiRoutes.EMPLOYEES}/${employeeId}`
     );
   }
 

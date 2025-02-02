@@ -16,7 +16,6 @@ export class DrawerService {
    * @param component - The component to be rendered inside the drawer.
    * @param data - Optional data to be passed to the component.
    */
-
   open(component: Type<any>, data?: any) {
     this.drawerToggle.next({ open: true, component, data });
   }

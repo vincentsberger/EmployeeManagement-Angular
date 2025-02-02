@@ -4,7 +4,7 @@ import Keycloak from 'keycloak-js';
 import { ApiRoutes } from '../enums/api-routes';
 import { Observable } from 'rxjs';
 import { ErrorHandlerService } from './error-handler.service';
-import { catchError, map, retry, tap } from 'rxjs/operators';
+import { catchError, retry } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -109,7 +109,6 @@ export class ApiService {
    * @example `/employees/1`, `/qualifications/1/employees`
    * @returns The response of the API as an observable of type `T`.
    */
-
   public sendDeleteRequest<T>(apiPath: string): Observable<T> {
     return this.httpClient
       .delete<T>(ApiRoutes.BASE_URL + apiPath, {

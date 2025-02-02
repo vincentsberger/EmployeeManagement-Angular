@@ -23,10 +23,10 @@ import { MatIconModule } from '@angular/material/icon';
     trigger('slideInOut', [
       transition(':enter', [
         style({ transform: 'translateX(100%)' }),
-        animate('200ms ease-out', style({ transform: 'translateX(0%)' })),
+        animate('500ms 100ms ease-out', style({ transform: 'translateX(0%)' })),
       ]),
       transition(':leave', [
-        animate('200ms ease-in', style({ transform: 'translateX(100%)' })),
+        animate('500ms 100ms ease-in', style({ transform: 'translateX(100%)' })),
       ]),
     ]),
   ],
@@ -45,7 +45,7 @@ export class DrawerPanelComponent implements OnDestroy, AfterViewInit {
   private subscription!: Subscription;
   private pendingComponent?: { component: Type<any>; data?: any };
 
-  constructor(private drawerService: DrawerService) {
+  constructor(protected drawerService: DrawerService) {
     this.subscription = this.drawerService.drawerToggle$.subscribe(
       ({ open, component, data }) => {
         this.title = data?.title;

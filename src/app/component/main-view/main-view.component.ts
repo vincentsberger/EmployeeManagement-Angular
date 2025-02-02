@@ -3,11 +3,16 @@ import { Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { DrawerPanelComponent } from "../drawer-panel/drawer-panel.component";
+import { DrawerPanelComponent } from '../drawer-panel/drawer-panel.component';
 
 @Component({
   selector: 'app-main-view',
-  imports: [RouterLink, MatIconModule, MatSlideToggleModule, DrawerPanelComponent],
+  imports: [
+    RouterLink,
+    MatIconModule,
+    MatSlideToggleModule,
+    DrawerPanelComponent,
+  ],
   templateUrl: './main-view.component.html',
   styleUrl: './main-view.component.scss',
   standalone: true,

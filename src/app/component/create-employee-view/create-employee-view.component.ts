@@ -48,7 +48,7 @@ import { DrawerService } from '../../service/drawer.service';
   styleUrl: './create-employee-view.component.scss',
 })
 export class CreateEmployeeViewComponent {
-  employeeForm: FormGroup;
+  newEmployeeForm: FormGroup;
   qualifications$: Observable<Qualification[]>;
 
   selectedItems: number[] = [];
@@ -62,7 +62,7 @@ export class CreateEmployeeViewComponent {
   ) {
     this.qualifications$ = this.qualificationService.getQualifications();
 
-    this.employeeForm = this.fb.group({
+    this.newEmployeeForm = this.fb.group({
       lastName: ['', Validators.required],
       firstName: ['', Validators.required],
       street: ['', Validators.required],
@@ -75,13 +75,13 @@ export class CreateEmployeeViewComponent {
 
   onSelectionChange(event: any) {
     this.selectedItems = event.value;
-    this.employeeForm.patchValue({ skillSet: this.selectedItems });
+    this.newEmployeeForm.patchValue({ skillSet: this.selectedItems });
   }
 
   saveEmployee() {
-    if (this.employeeForm.valid) {
+    if (this.newEmployeeForm.valid) {
       // Retrieve form data
-      const formData: PostEmployeeDTO = this.employeeForm.value;
+      const formData: PostEmployeeDTO = this.newEmployeeForm.value;
 
       this.employeeService
         .addEmployee(formData)
@@ -96,7 +96,7 @@ export class CreateEmployeeViewComponent {
           this.drawerService.close();
         });
 
-      this.employeeForm.reset();
+      this.newEmployeeForm.reset();
     }
   }
 

@@ -43,6 +43,7 @@ export class EmployeeListComponent {
   ) {
     this.employees$ = this.employeeService.getEmployees();
     this.filteredEmployees$ = this.employees$;
+    this.employeeService.fetchEmployees();
   }
 
   /**

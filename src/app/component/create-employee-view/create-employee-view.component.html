@@ -1,6 +1,6 @@
 <section>
   <div class="container">
-    <form [formGroup]="employeeForm">
+    <form [formGroup]="newEmployeeForm">
       <div class="formfield d-flex justify-content-start gap-3 flex-wrap align-items-center">
         <div class="inputfield">
           <label for="firstName">Vorname</label>
@@ -81,7 +81,7 @@
         <button
           class="btn text-primary btn-outline-secondary me-4"
           type="submit"
-          [disabled]="!employeeForm.valid"
+          [disabled]="!newEmployeeForm.valid"
           (click)="saveEmployee()"
         >
           Speichern

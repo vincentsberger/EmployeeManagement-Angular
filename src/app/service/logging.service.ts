@@ -25,11 +25,13 @@ export class LoggingService {
     console.debug('LoggingService[Debug]:\n', message, data);
   }
 
+
   /**
-   * Protokolliert einen Fehler im Browser-Console.
-   * Man könnte hier auch eine Verbindung zu einem externen Monitoring-Tool
-   * herstellen, um die Fehler zu protokollieren.
-   * @param errorMessage Die Fehlermeldung, die protokolliert werden soll.
+   * Logs an error message in the browser console.
+   * You could also establish a connection to an external monitoring tool
+   * here to log the error messages.
+   * @param errorMessage The error message to be logged.
+   * @param data Optional data to be logged.
    */
   error(errorMessage: string, data?: any): void {
     // Hier könnte man z. B. Fehler an ein externes Monitoring-Tool senden
@@ -37,8 +39,15 @@ export class LoggingService {
   }
 
 
+  /**
+   * Logs a warning message in the browser console.
+   * You could also establish a connection to an external monitoring tool
+   * here to log the warning messages.
+   * @param errorMessage The warning message to be logged.
+   * @param data Optional data to be logged.
+   */
   warning(errorMessage: string, data?: any): void {
     // Hier könnte man z. B. Fehler an ein externes Monitoring-Tool senden
-    console.error('LoggingService[Warning]:\n', errorMessage, data);
+    console.warn('LoggingService[Warning]:\n', errorMessage, data);
   }
 }

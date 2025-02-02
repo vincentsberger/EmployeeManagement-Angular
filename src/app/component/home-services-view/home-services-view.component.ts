@@ -4,10 +4,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import {CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-home-services-view',
-  imports: [MatCardModule, MatButtonModule, CommonModule],
+  imports: [MatCardModule, MatButtonModule, CommonModule, MatProgressSpinnerModule],
   templateUrl: './home-services-view.component.html',
   styleUrl: './home-services-view.component.css',
 })
@@ -23,10 +24,10 @@ export class HomeServicesViewComponent {
     }
     this.isLoading = true;
     setTimeout(() => {
-      this.isLoading = false;
-            this.keycloak.login({
+      this.keycloak.login({
         redirectUri: window.location.origin + '/home',
       });
-    }, 2000);
+      this.isLoading = false;
+    }, 1000);
   }
 }

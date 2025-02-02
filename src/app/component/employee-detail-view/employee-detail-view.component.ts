@@ -18,7 +18,7 @@ import { QualificationService } from '../../service/qualification.service';
   templateUrl: './employee-detail-view.component.html',
   styleUrls: ['./employee-detail-view.component.scss'],
 })
-export class EmployeeDetailViewComponent implements OnInit {
+export class EmployeeDetailViewComponent {
   private keycloak = inject(Keycloak);
   private bearer = this.keycloak.token;
 
@@ -44,18 +44,5 @@ export class EmployeeDetailViewComponent implements OnInit {
           )
       )
     );
-  }
-
-  ngOnInit(): void {}
-
-  private createAuthHeaders() {
-    return new HttpHeaders().set('Authorization', `Bearer ${this.bearer}`);
-  }
-
-  private fetchEmployeeDetails(id: string | null): Observable<Employee | null> {
-    if (!id) return of(null);
-    return this.http.get<Employee>(`http://localhost:8089/employees/${id}`, {
-      headers: this.createAuthHeaders(),
-    });
   }
 }
