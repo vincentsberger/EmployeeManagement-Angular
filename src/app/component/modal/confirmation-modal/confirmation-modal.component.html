@@ -1,0 +1,18 @@
+<mat-dialog-content class="mat-typography">
+  <h3>Warnung!</h3>
+  <p *ngIf="data && data.qualification">
+    Bist du sicher, dass du die Qualifikation "{{ data.qualification.skill }}"
+    [ID: {{ data.qualification.id }} ] löschen willst?
+  </p>
+  <p *ngIf="data && data.employee">
+    Bist du sicher, dass du den Mitarbeiter "{{ data.employee.firstName }} {{ data.employee.fullname }}"
+    [ID: {{ data.employee.id }} ] löschen willst?
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="d-flex flex-row gap-3">
+  <button class="btn btn-success" [mat-dialog-close]="false" cdkFocusInitial>
+    <i class="bi bi-arrow-left"></i> Nein, abbrechen und zurück</button>
+  <button class="btn btn-outline-danger" [mat-dialog-close]="true">
+    <i class="bi bi-trash"></i> löschen
+  </button>
+</mat-dialog-actions>

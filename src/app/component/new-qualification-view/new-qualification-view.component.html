@@ -1,0 +1,31 @@
+<div class="container">
+  <form>
+    <div class="mb-3">
+      <label for="qualificationName" class="form-label"></label>
+      <input
+        type="text"
+        id="qualificationName"
+        class="form-control"
+        [(ngModel)]="qualificationName"
+        [ngModelOptions]="{ standalone: true }"
+        placeholder="Qualifikationsname eingeben"
+        required
+        (keyup.enter)="saveQualification()"
+      />
+    </div>
+
+    <div class="d-flex justify-content-end gap-3">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="saveQualification()"
+        [disabled]="!qualificationName"
+      >
+        Speichern
+      </button>
+      <button type="button" class="btn btn-secondary me-2" (click)="cancel()">
+        Abbrechen
+      </button>
+    </div>
+  </form>
+</div>
