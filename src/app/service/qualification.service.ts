@@ -127,7 +127,7 @@ export class QualificationService {
               .pipe(
                 tap((): void =>
                   this.logger$.debug(
-                    `Qualifikation ${qualification.skill}[${qualification.id}] erfolgreich gelöscht!`,
+                    `Qualifikation erfolgreich gelöscht!`,
                     qualification
                   )
                 )

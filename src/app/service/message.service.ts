@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class MessageService {
   private toastOptions = {
-    timeOut: 3000,
+    timeOut: 5000,
     closeButton: true,
     progressBar: true,
     positionClass: 'toast-bottom-center',
