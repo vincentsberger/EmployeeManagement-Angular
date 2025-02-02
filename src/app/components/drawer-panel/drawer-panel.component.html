@@ -1,0 +1,11 @@
+<div class="drawer-backdrop" [hidden]="!isOpen" (click)="close()"></div>
+
+<div class="drawer-panel bg-primary-dark" [hidden]="!isOpen" [@slideInOut]>
+  <div class="drawer-panel-header d-flex flex-row align-items-center justify-content-between">
+    <h2>{{ title }}</h2>
+    <a (click)="close()" mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </a>
+  </div>
+  <ng-container #dynamicContent></ng-container>
+</div>
