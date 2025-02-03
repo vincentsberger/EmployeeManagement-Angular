@@ -17,13 +17,14 @@ import {
 import { MatOptionModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import {  map, Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { PostEmployeeDTO } from '../../model/DTO/post-employee-dto';
 import { EmployeeService } from '../../service/employee.service';
 import { QualificationService } from '../../service/qualification.service';
 import { Employee } from '../../model/Employee';
 import { MessageService } from '../../service/message.service';
 import { DrawerService } from '../../service/drawer.service';
+import { PostQualificationDTO } from '../../model/DTO/post-qualification-dto';
 
 @Component({
   selector: 'app-create-employee-view',
@@ -71,16 +72,30 @@ export class CreateEmployeeViewComponent {
       phone: new FormControl<string>('', [Validators.required]),
       skillSet: new FormControl<number[]>([]),
     });
+  }
 
-    // this.newEmployeeForm = this.fb.group({
-    //   lastName: ['', Validators.required],
-    //   firstName: ['', Validators.required],
-    //   street: ['', Validators.required],
-    //   postcode: ['', Validators.required, Validators.pattern('^[0-9]{5}$')],
-    //   city: ['', Validators.required],
-    //   phone: ['', Validators.required],
-    //   skillSet: [this.selectedItems],
-    // });
+  public addNewQualification(skill: string) {
+    const newQualification: PostQualificationDTO = {
+      skill: skill.trim(),
+    } as PostQualificationDTO;
+    this.qualificationService
+      .isExistingQualification(newQualification)
+      .subscribe((isExisting: boolean): void => {
+        if (isExisting) {
+          this.messageService.showError(
+            'Qualifikation existiert bereits!',
+            'Fehler!'
+          );
+          this.newEmployeeForm.get('newSkill')?.reset();
+        } else {
+          this.qualificationService
+            .addQualification(newQualification)
+            .subscribe((qualification: Qualification) => {
+              this.qualificationService.fetchQualifications();
+            });
+        }
+      });
+    const newSkillValue = this.newEmployeeForm.get('newSkill')?.value.trim();
   }
 
   /**
@@ -109,29 +124,8 @@ export class CreateEmployeeViewComponent {
       const formData: PostEmployeeDTO = this.newEmployeeForm.value;
 
       // check if qualifcation already exists
-      let employeeAlreadyExists = false;
-
-      this.employeeService
-        .getEmployees()
-        .pipe(
-          map((employees: Employee[]): boolean =>
-            employees.some(
-              (employee: Employee): boolean => (
-                employee.firstName == formData.firstName &&
-                employee.lastName == formData.lastName )
-                // employee.street === formData.street &&
-                // employee.postcode === formData.postcode &&
-                // employee.city === formData.city &&
-                // employee.phone === formData.phone
-            )
-          )
-        )
-        .subscribe((employeeExists: boolean): void => {
-          if (employeeExists) {
-            employeeAlreadyExists = true;
-            return;
-          }
-        });
+      const employeeAlreadyExists =
+        this.employeeService.isExistingEmployee(formData);
 
       if (employeeAlreadyExists) {
         this.messageService.showError(

@@ -92,6 +92,23 @@ export class EmployeeService {
       );
   }
 
+  /**
+   * Checks if an employee already exists in the database.
+   * @param employee The employee to be checked.
+   * @returns An observable of a boolean indicating whether the employee already exists.
+   */
+  public isExistingEmployee(employee: PostEmployeeDTO) {
+    return this.employees$.pipe(
+      map((employeeCollection: Employee[]): boolean =>
+        employeeCollection.some(
+          (employeeEntry: Employee) =>
+            employeeEntry.firstName === employee.firstName &&
+            employeeEntry.lastName === employee.lastName
+        )
+      )
+    );
+  }
+
   // PUT
   public updateEmployee(employee: Employee) {}
 

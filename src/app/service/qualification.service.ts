@@ -111,6 +111,26 @@ export class QualificationService {
       );
   }
 
+/**
+ * Checks if a qualification with the same skill already exists in the current collection.
+ *
+ * The function takes a `Qualification` object and maps over the current collection of qualifications
+ * to determine if any qualification contains the same skill as the provided one.
+ *
+ * @param qualification - The `Qualification` object to check against the existing collection.
+ * @returns An observable boolean indicating whether a qualification with the same skill exists.
+ */
+
+  public isExistingQualification(postQualificationDTO: PostQualificationDTO) {
+    return this.qualifications$.pipe(
+      map((qualificationCollection: Qualification[]): boolean =>
+        qualificationCollection.some(
+          (qualificationEntry: Qualification): boolean => qualificationEntry.skill === postQualificationDTO.skill
+        )
+      )
+    )
+  }
+
   public updateQualification(qualification: Qualification) {}
 
   /**
