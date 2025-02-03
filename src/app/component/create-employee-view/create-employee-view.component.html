@@ -1,11 +1,21 @@
 <section>
   <div class="container">
     <form [formGroup]="newEmployeeForm">
-      <div class="formfield d-flex justify-content-start gap-3 flex-wrap align-items-center">
+      <div
+        class="formfield d-flex justify-content-start gap-3 flex-wrap align-items-center"
+      >
         <div class="inputfield">
           <label for="firstName">Vorname</label>
           <input
             class="form-control rounded-pill mb-2"
+            [class]="{
+              'is-invalid':
+                newEmployeeForm.get('firstName')?.invalid &&
+                newEmployeeForm.get('firstName')?.dirty
+            }"
+            [class]="{
+              'is-valid': newEmployeeForm.get('firstName')?.valid
+            }"
             id="firstName"
             formControlName="firstName"
             type="text"
@@ -14,6 +24,14 @@
           <label for="lastName">Nachname</label>
           <input
             class="form-control rounded-pill mb-2"
+            [class]="{
+              'is-invalid':
+                newEmployeeForm.get('lastName')?.invalid &&
+                newEmployeeForm.get('lastName')?.dirty
+            }"
+            [class]="{
+              'is-valid': newEmployeeForm.get('lastName')?.valid
+            }"
             id="lastName"
             formControlName="lastName"
             type="text"
@@ -22,6 +40,14 @@
           <label for="phone">Telefonnummer</label>
           <input
             class="form-control rounded-pill mb-2"
+            [class]="{
+              'is-invalid':
+                newEmployeeForm.get('phone')?.invalid &&
+                newEmployeeForm.get('phone')?.dirty
+            }"
+            [class]="{
+              'is-valid': newEmployeeForm.get('phone')?.valid
+            }"
             id="phone"
             formControlName="phone"
             type="text"
@@ -32,6 +58,14 @@
           <label for="street">Straße und Hausnummer</label>
           <input
             class="form-control rounded-pill mb-2"
+            [class]="{
+              'is-invalid':
+                newEmployeeForm.get('street')?.invalid &&
+                newEmployeeForm.get('street')?.dirty
+            }"
+            [class]="{
+              'is-valid': newEmployeeForm.get('street')?.valid
+            }"
             id="street"
             formControlName="street"
             type="text"
@@ -40,6 +74,14 @@
           <label for="city">Stadt</label>
           <input
             class="form-control rounded-pill mb-2"
+            [class]="{
+              'is-invalid':
+                newEmployeeForm.get('city')?.invalid &&
+                newEmployeeForm.get('city')?.dirty
+            }"
+            [class]="{
+              'is-valid': newEmployeeForm.get('city')?.valid
+            }"
             id="city"
             formControlName="city"
             type="text"
@@ -48,6 +90,14 @@
           <label for="postcode">Postleitzahl</label>
           <input
             class="form-control rounded-pill mb-2"
+            [class]="{
+              'is-invalid':
+                newEmployeeForm.get('postcode')?.invalid &&
+                newEmployeeForm.get('postcode')?.dirty
+            }"
+            [class]="{
+              'is-valid': newEmployeeForm.get('postcode')?.valid
+            }"
             id="postcode"
             formControlName="postcode"
             type="text"
@@ -79,7 +129,7 @@
 
       <div class="container mt-3">
         <button
-          class="btn text-primary btn-outline-secondary me-4"
+          class="btn text-white btn-primary me-4"
           type="submit"
           [disabled]="!newEmployeeForm.valid"
           (click)="saveEmployee()"

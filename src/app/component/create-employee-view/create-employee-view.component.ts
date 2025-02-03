@@ -3,6 +3,7 @@ import { MainViewComponent } from '../main-view/main-view.component';
 import { RouterLink } from '@angular/router';
 import {
   FormBuilder,
+  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
@@ -19,7 +20,7 @@ import {
 import { MatOptionModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { Observable, of } from 'rxjs';
+import { last, Observable, of } from 'rxjs';
 import { PostEmployeeDTO } from '../../model/DTO/post-employee-dto';
 import { EmployeeService } from '../../service/employee.service';
 import { QualificationService } from '../../service/qualification.service';
@@ -62,15 +63,26 @@ export class CreateEmployeeViewComponent {
   ) {
     this.qualifications$ = this.qualificationService.getQualifications();
 
-    this.newEmployeeForm = this.fb.group({
-      lastName: ['', Validators.required],
-      firstName: ['', Validators.required],
-      street: ['', Validators.required],
-      postcode: ['', Validators.required],
-      city: ['', Validators.required],
-      phone: ['', Validators.required],
-      skillSet: [this.selectedItems],
-    });
+    this.newEmployeeForm = new FormGroup({
+      firstName: new FormControl<string>("", [Validators.required]),
+      lastName: new FormControl<string>("", [Validators.required]),
+      street: new FormControl<string>("", [Validators.required]),
+      postcode: new FormControl<string>("", [Validators.required, Validators.pattern('^[0-9]{5}$')]),
+      city: new FormControl<string>("", [Validators.required]),
+      phone: new FormControl<string>("", [Validators.required]),
+      skillSet: new FormControl<number[]>([]),
+    })
+
+
+    // this.newEmployeeForm = this.fb.group({
+    //   lastName: ['', Validators.required],
+    //   firstName: ['', Validators.required],
+    //   street: ['', Validators.required],
+    //   postcode: ['', Validators.required, Validators.pattern('^[0-9]{5}$')],
+    //   city: ['', Validators.required],
+    //   phone: ['', Validators.required],
+    //   skillSet: [this.selectedItems],
+    // });
   }
 
   onSelectionChange(event: any) {

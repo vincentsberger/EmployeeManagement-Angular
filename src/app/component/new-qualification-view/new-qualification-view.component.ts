@@ -29,6 +29,15 @@ export class NewQualificationViewComponent {
     private drawerService: DrawerService
   ) {}
 
+  /**
+   * Saves the new qualification by sending a POST request to the backend.
+   *
+   * Checks if the name of the qualification is not empty and not longer than 35 characters, and if it already exists.
+   * If the qualification already exists, shows an error message and closes the drawer.
+   * If the qualification does not exist already, sends a POST request to the backend with the new qualification information.
+   * The response is expected to be a `Qualification` object, which is then logged to the console.
+   * Finally, fetches the updated list of qualifications and closes the drawer.
+   */
   saveQualification() {
     if (this.qualificationName.trim() === '') {
       alert('Der Name der Qualifikation darf nicht leer sein.');
@@ -38,8 +47,8 @@ export class NewQualificationViewComponent {
       alert('Der Name der Qualifikation ist zu lang');
       return;
     }
-// check if qualifcation already exists
-let qualificationExistsAlready = false;
+    // check if qualifcation already exists
+    let qualificationExistsAlready = false;
 
     this.qualificationService
       .getQualifications()
@@ -51,21 +60,21 @@ let qualificationExistsAlready = false;
           )
         )
       )
-      .subscribe( (qualificationExists: boolean) => {
+      .subscribe((qualificationExists: boolean) => {
         if (qualificationExists) {
           qualificationExistsAlready = true;
           return;
         }
       });
 
-      if(qualificationExistsAlready) {
-        this.messageService.showError(
-          `Qualifikation "${this.qualificationName}" existiert bereits und konnte daher nicht hinzugefügt werden!`,
-          'Fehler beim Hinzufügen!'
-        );
-        this.drawerService.close();
-        return;
-      }
+    if (qualificationExistsAlready) {
+      this.messageService.showError(
+        `Qualifikation "${this.qualificationName}" existiert bereits!`,
+        'Fehler beim Hinzufügen!'
+      );
+      this.drawerService.close();
+      return;
+    }
 
     const payload = { skill: this.qualificationName };
 

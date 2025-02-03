@@ -78,3 +78,11 @@ button {
 button.btn-primary {
   margin-left: 10px;
 }
+
+.is-invalid {
+  border-color: var(--bs-form-invalid-border-color);
+}
+
+.is-valid {
+  border-color: var(--bs-form-valid-border-color);
+}
