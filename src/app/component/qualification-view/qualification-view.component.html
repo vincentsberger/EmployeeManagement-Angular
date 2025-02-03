@@ -31,7 +31,7 @@
 
   <div class="list-group">
       <div
-        *ngFor="let qualification of this.qualificationService.qualifications$ | async; let last = last"
+        *ngFor="let qualification of filteredQualifications$ | async; let last = last"
       >
         <div
           class="list-group-item d-flex justify-content-between align-items-center border-0"

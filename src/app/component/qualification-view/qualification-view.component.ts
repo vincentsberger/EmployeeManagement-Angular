@@ -25,7 +25,7 @@ import { NewQualificationViewComponent } from '../new-qualification-view/new-qua
     MatDialogModule,
     MatProgressSpinnerModule,
     MatIcon,
-],
+  ],
   templateUrl: './qualification-view.component.html',
   styleUrl: './qualification-view.component.scss',
 })
@@ -54,8 +54,7 @@ export class QualificationViewComponent {
    * `skill` property contains the search query, ignoring case differences.
    */
   searchQualification() {
-    this.filteredQualifications$ = this.qualificationService
-      .getQualifications()
+    this.filteredQualifications$ = this.qualificationService.getQualifications()
       .pipe(
         map((qualifications) =>
           qualifications.filter((qualification) =>
@@ -64,7 +63,7 @@ export class QualificationViewComponent {
               .includes(this.searchQuery.toLowerCase())
           )
         )
-      );
+      )
   }
 
   /**
@@ -80,12 +79,6 @@ export class QualificationViewComponent {
       title: 'Qualifikation hinzufügen',
     });
   }
-
-  // updateView() {
-  //   setTimeout(() => {
-  //     this.isLoading = false;
-  //   }, 500);
-  // }
 
   /**
    * Opens a confirmation modal when deleting a qualification, and deletes the

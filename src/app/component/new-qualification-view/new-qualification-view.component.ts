@@ -10,6 +10,7 @@ import { ApiRoutes } from '../../enums/api-routes';
 import { ApiService } from '../../service/api.service';
 import { DrawerService } from '../../service/drawer.service';
 import { PostQualificationDTO } from '../../model/DTO/post-qualification-dto';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-new-qualification-view',
@@ -37,19 +38,47 @@ export class NewQualificationViewComponent {
       alert('Der Name der Qualifikation ist zu lang');
       return;
     }
+// check if qualifcation already exists
+let qualificationExistsAlready = false;
+
+    this.qualificationService
+      .getQualifications()
+      .pipe(
+        map((qualifications: Qualification[]): boolean =>
+          qualifications.some(
+            (qualification): boolean =>
+              qualification.skill === this.qualificationName
+          )
+        )
+      )
+      .subscribe( (qualificationExists: boolean) => {
+        if (qualificationExists) {
+          qualificationExistsAlready = true;
+          return;
+        }
+      });
+
+      if(qualificationExistsAlready) {
+        this.messageService.showError(
+          `Qualifikation "${this.qualificationName}" existiert bereits und konnte daher nicht hinzugefügt werden!`,
+          'Fehler beim Hinzufügen!'
+        );
+        this.drawerService.close();
+        return;
+      }
 
     const payload = { skill: this.qualificationName };
 
-    this.qualificationService
-      .addQualification(payload)
-      .subscribe((qualification: Qualification) => {
+    this.qualificationService.addQualification(payload).subscribe({
+      next: (qualification: Qualification) => {
         this.messageService.showSuccess(
           `Qualifikation "${qualification.skill}" erfolgreich hinzugefügt!`,
           'Hinzufügen erfolgreich!'
         );
         this.qualificationService.fetchQualifications();
         this.drawerService.close();
-      });
+      },
+    });
   }
 
   cancel() {
