@@ -30,7 +30,7 @@ html.darkmode {
 
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
-@import 'ngx-toastr/toastr';
+// @import 'ngx-toastr/toastr';
 
 body {
   background: var(--mat-sys-surface);
@@ -67,13 +67,4 @@ body {
 
 .fab i {
   font-size: 1.5rem;
-}
-
-:app-qualification-view {
-  @include mat.snack-bar-overrides(
-    (
-      container-color: orange,
-      supporting-text-color: red,
-    )
-  );
 }

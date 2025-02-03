@@ -1,6 +1,6 @@
 <section>
   <div class="container">
-    <form [formGroup]="newEmployeeForm">
+    <form [formGroup]="newEmployeeForm" (keyup.enter)="saveEmployee()">
       <div
         class="formfield d-flex justify-content-start gap-3 flex-wrap align-items-center"
       >
@@ -130,9 +130,10 @@
       <div class="container mt-3">
         <button
           class="btn text-white btn-primary me-4"
-          type="submit"
+          type="button"
           [disabled]="!newEmployeeForm.valid"
           (click)="saveEmployee()"
+          (keyup.enter)="saveEmployee()"
         >
           Speichern
         </button>

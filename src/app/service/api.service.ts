@@ -82,7 +82,7 @@ export class ApiService {
           delay: 100,
         }),
         catchError<T, Observable<T>>(
-          this.errorHandlerService.handleError<T>("postRequest")
+          this.errorHandlerService.handleError<T>("postRequest", undefined)
         )
       );
   }
@@ -122,7 +122,7 @@ export class ApiService {
           delay: 100,
         }),
         catchError<T, Observable<T>>(
-          this.errorHandlerService.handleError<T>("deleteRequest")
+          this.errorHandlerService.handleError<T>("deleteRequest", undefined)
         )
       );
   }

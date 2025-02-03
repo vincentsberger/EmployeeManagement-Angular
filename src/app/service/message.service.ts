@@ -18,7 +18,7 @@ export class MessageService {
     toastClass: 'ngx-toastr',
     titleClass: 'toast-title',
     messageClass: 'toast-message',
-    easeTime: 1000,
+    easeTime: 500,
     tapToDismiss: true,
     onActivateTick: false,
     newestOnTop: true,
