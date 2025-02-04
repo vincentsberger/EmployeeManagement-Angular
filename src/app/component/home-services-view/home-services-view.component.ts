@@ -27,7 +27,6 @@ export class HomeServicesViewComponent {
       this.keycloak.login({
         redirectUri: window.location.origin + '/home',
       });
-      this.isLoading = false;
     }, 1000);
   }
 }

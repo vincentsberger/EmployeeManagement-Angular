@@ -35,6 +35,8 @@ export class QualificationViewComponent {
   filteredQualifications$: Observable<Qualification[]>;
   searchQuery: string = '';
 
+  isLoading: boolean = false;
+
   // test
   items: string[] = [];
 
@@ -43,8 +45,12 @@ export class QualificationViewComponent {
     protected messageService: MessageService,
     protected drawerService: DrawerService
   ) {
+    this.isLoading = true;
     this.qualifications$ = this.qualificationService.getQualifications();
     this.filteredQualifications$ = this.qualifications$;
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 700);
   }
 
   /**
@@ -100,9 +106,14 @@ export class QualificationViewComponent {
               `Qualifikation "${qualification.skill}" wurde erfolgreich gelöscht!`,
               'Löschen erfolgreich!'
             );
+            this.isLoading = true;
+            this.qualificationService.fetchQualifications();
+            setTimeout(() => {
+              this.isLoading = false;
+            }, 700);
           },
         });
-        this.qualificationService.fetchQualifications();
+
       }
     });
   }

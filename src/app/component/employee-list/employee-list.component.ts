@@ -14,15 +14,26 @@ import { CreateEmployeeViewComponent } from '../create-employee-view/create-empl
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from '../modal/confirmation-modal/confirmation-modal.component';
 import { MessageService } from '../../service/message.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ModalService } from '../../service/modal.service';
+import { EmployeeEditViewComponent } from '../employee-edit-view/employee-edit-view.component';
 
 @Component({
   standalone: true,
   selector: 'app-employee-list',
-  imports: [CommonModule, MainViewComponent, FormsModule, RouterLink, MatIcon],
+  imports: [
+    CommonModule,
+    MainViewComponent,
+    FormsModule,
+    RouterLink,
+    MatIcon,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.scss'],
 })
 export class EmployeeListComponent {
+  isLoading: boolean = false;
   keycloak = inject(Keycloak);
   bearer = this.keycloak.token;
   employees$: Observable<Employee[]>;
@@ -39,11 +50,16 @@ export class EmployeeListComponent {
   constructor(
     private employeeService: EmployeeService,
     private drawerService: DrawerService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private modalService: ModalService
   ) {
     this.employees$ = this.employeeService.getEmployees();
     this.filteredEmployees$ = this.employees$;
+    this.isLoading = true;
     this.employeeService.fetchEmployees();
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 1000);
   }
 
   /**
@@ -92,11 +108,15 @@ export class EmployeeListComponent {
       if (result == true) {
         this.employeeService.deleteEmployee(employee).subscribe({
           next: () => {
+            this.isLoading = true;
             this.messageService.showSuccess(
               `Mitarbeiter "${employee.firstName} ${employee.lastName}" wurde erfolgreich gelöscht!`,
               'Löschen erfolgreich!'
             );
             this.employeeService.fetchEmployees();
+            setTimeout(() => {
+              this.isLoading = false;
+            }, 700);
           },
         });
       }

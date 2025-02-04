@@ -63,13 +63,13 @@
 
                 <ul class="list-group mb-3">
                     <li
-                            *ngFor="let skill of qualifications.controls; let i = index"
+                            *ngFor="let qualification of currentEmployeeQualifications$ | async; let i = index"
                             class="list-group-item d-flex justify-content-between align-items-center"
                     >
-                        {{ skill.value.skill }}
+                        {{ qualification.skill }}
                         <button
                                 class="btn btn-link text-danger"
-                                (click)="deleteQualification(skill.value.skill)"
+                                (click)="deleteQualification(qualification.skill)"
                         >
                             <mat-icon>delete</mat-icon>
                         </button>
@@ -98,7 +98,7 @@
                 <button class="btn btn-secondary me-2" type="button" (click)="cancel()">Abbrechen</button>
                 <button class="btn btn-primary"
                         type="button"
-                        (click)="save()"
+                        (click)="updateEmployee()"
                         [disabled]="employeeForm.invalid">
                     Speichern
                 </button>

@@ -77,7 +77,7 @@ export class QualificationService {
  * @param employeeId - The ID of the employee for whom to retrieve qualifications.
  * @returns An observable of an array of `Qualification` objects associated with the employee.
  */
-  public getQualificationsByEmployeeId(employeeId: number): Observable<Qualification[]> {
+  public getQualificationsByEmployeeId(employeeId: number|string): Observable<Qualification[]> {
     return this.apiService.sendGetRequest<EmployeeQualitificationsDTO>(`${ApiRoutes.EMPLOYEES}/${employeeId}/${ApiRoutes.QUALIFICATIONS}`)
           .pipe(
             map((data: EmployeeQualitificationsDTO): Qualification[] => data.skillSet)

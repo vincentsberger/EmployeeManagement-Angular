@@ -47,11 +47,15 @@ import { PostQualificationDTO } from '../../model/DTO/post-qualification-dto';
   templateUrl: './create-employee-view.component.html',
   styleUrl: './create-employee-view.component.scss',
 })
+
 export class CreateEmployeeViewComponent {
+  isLoading: boolean = false;
   newEmployeeForm: FormGroup;
   qualifications$: Observable<Qualification[]>;
 
   selectedItems: number[] = [];
+
+
 
   constructor(
     private employeeService: EmployeeService,
@@ -69,7 +73,7 @@ export class CreateEmployeeViewComponent {
         Validators.required,
         Validators.pattern('^[0-9]{5}$'),
       ]),
-      city: new FormControl<string>('', [Validators.required]),
+      city: new FormControl<string>('', [Validators.required,]),
       phone: new FormControl<string>('', [Validators.required]),
       skillSet: new FormControl<number[]>([]),
       newSkill: new FormControl<string>('', Validators.maxLength(35)),
@@ -146,7 +150,7 @@ export class CreateEmployeeViewComponent {
   saveEmployee() {
     if (this.newEmployeeForm.valid) {
       // Retrieve form data
-      let formData: PostEmployeeDTO = this.newEmployeeForm.value;
+      let formData: PostEmployeeDTO = this.prepareFormData(this.newEmployeeForm.value);
 
       let isExistingEmployee = false;
 
@@ -168,7 +172,6 @@ export class CreateEmployeeViewComponent {
           }" existiert bereits!`,
           'Fehler beim Hinzufügen!'
         );
-        this.drawerService.close();
         return;
       } else {
         this.employeeService
@@ -183,12 +186,28 @@ export class CreateEmployeeViewComponent {
             this.employeeService.fetchEmployees();
             this.drawerService.close();
           });
-
         this.newEmployeeForm.reset();
       }
     }
   }
 
+  /**
+   * Trims the last name, postcode, and city fields of the given PostEmployeeDTO.
+   * @param formData The PostEmployeeDTO to be trimmed.
+   * @returns The trimmed PostEmployeeDTO.
+   */
+  private prepareFormData(formData: PostEmployeeDTO): PostEmployeeDTO {
+    formData.lastName = formData.lastName?.trim();
+    formData.street = formData.street;
+    formData.postcode = formData.postcode?.trim();
+    formData.city = formData.city?.trim();
+    formData.phone = formData.phone;
+    return formData;
+  }
+
+  /**
+   * Closes the drawer and emits a value through the drawerToggle subject to trigger the drawer close state.
+   */
   cancel() {
     this.drawerService.close();
   }

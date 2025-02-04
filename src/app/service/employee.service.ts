@@ -52,7 +52,7 @@ export class EmployeeService {
    * @param employeeId - The ID of the employee to retrieve.
    * @returns An observable of the retrieved employee.
    */
-  public getEmployeeById(employeeId: number): Observable<Employee> {
+  public getEmployeeById(employeeId: number|string): Observable<Employee> {
     return this.apiService.sendGetRequest<Employee>(
       `${ApiRoutes.EMPLOYEES}/${employeeId}`
     );
