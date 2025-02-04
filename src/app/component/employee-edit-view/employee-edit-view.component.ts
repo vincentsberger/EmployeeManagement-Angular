@@ -7,88 +7,87 @@ import {firstValueFrom} from 'rxjs';
 import {MainViewComponent} from "../main-view/main-view.component";
 import {CommonModule} from "@angular/common";
 import {MatIconModule} from "@angular/material/icon";
+import {EmployeeService} from "../../service/employee.service";
+import {QualificationService} from "../../service/qualification.service";
 
 @Component({
-    selector: 'app-employee-edit',
-    templateUrl: './employee-edit-view.component.html',
-    styleUrls: ['./employee-edit-view.component.scss'],
-    imports: [
-        CommonModule,
-        MainViewComponent,
-        ReactiveFormsModule,
-        MatIconModule,
-    ]
+  selector: 'app-employee-edit',
+  templateUrl: './employee-edit-view.component.html',
+  styleUrls: ['./employee-edit-view.component.scss'],
+  imports: [
+    CommonModule,
+    MainViewComponent,
+    ReactiveFormsModule,
+    MatIconModule,
+  ]
 })
 export class EmployeeEditViewComponent implements OnInit {
-    keycloak = inject(Keycloak);
-    bearer = this.keycloak.token;
+  keycloak = inject(Keycloak);
+  bearer = this.keycloak.token;
 
-    employeeForm: FormGroup;
-    employeeId: string | null = null;
+  employeeForm: FormGroup;
+  employeeId: string | null = null;
 
   deletedSkills: { id: number; skill: string }[] = [];
 
   constructor(
-        private fb: FormBuilder,
-        private http: HttpClient,
-        private route: ActivatedRoute,
-        private router: Router
-    ) {
-        this.employeeForm = this.fb.group({
-            firstName: ['', Validators.required],
-            lastName: ['', Validators.required],
-            phone: [''],
-            street: [''],
-            postcode: ['', [Validators.required, Validators.pattern('^[0-9]{5}$')]],
-            city: [''],
-            qualifications: this.fb.array([]),
-            newSkill: ['']
-        });
-    }
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private route: ActivatedRoute,
+    private router: Router,
+    private employeeService: EmployeeService,
+    private qualificationService: QualificationService
+  ) {
+    this.employeeForm = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      phone: [''],
+      street: [''],
+      postcode: ['', [Validators.required, Validators.pattern('^[0-9]{5}$')]],
+      city: [''],
+      qualifications: this.fb.array([]),
+      newSkill: ['']
+    });
+  }
 
-    ngOnInit(): void {
-        this.employeeId = this.route.snapshot.paramMap.get('id');
-        if (this.employeeId) {
-            this.loadEmployeeData(this.employeeId);
-            this.loadQualifications(this.employeeId);
-        }
+  ngOnInit(): void {
+    this.employeeId = this.route.snapshot.paramMap.get('id');
+    if (this.employeeId) {
+      this.loadEmployeeData(this.employeeId);
+      this.loadQualifications(this.employeeId);
     }
+  }
 
-    private get headers(): HttpHeaders {
-        return new HttpHeaders().set('Authorization', `Bearer ${this.bearer}`);
-    }
+  get qualifications() {
+    return this.employeeForm.get('qualifications') as FormArray;
+  }
 
-    private async loadEmployeeData(id: string): Promise<void> {
-        try {
-            const employee = await firstValueFrom(this.http
-                .get<any>(`http://localhost:8089/employees/${id}`, {headers: this.headers})
-            );
-            this.employeeForm.patchValue(employee);
-        } catch (error) {
-            console.error('Fehler beim Laden der Mitarbeiterdaten:', error);
-        }
-    }
+  private loadEmployeeData(id: string): void {
+    const numericId = Number(id);
+    this.employeeService.getEmployeeById(numericId).subscribe({
+      next: (employee) => {
+        this.employeeForm.patchValue(employee);
+      },
+      error: (error) => {
+        console.error('Fehler beim Laden der Mitarbeiterdaten:', error);
+      }
+    });
+  }
 
-    private async loadQualifications(id: string): Promise<void> {
-        try {
-            const response = await firstValueFrom(this.http
-                .get<{
-                    skillSet: { id: number; skill: string }[]
-                }>(`http://localhost:8089/employees/${id}/qualifications`, {headers: this.headers})
-            );
-
-            const skillsArray = this.fb.array(
-                response.skillSet.map(skill => this.fb.group({id: skill.id, skill: skill.skill}))
-            );
-            this.employeeForm.setControl('qualifications', skillsArray);
-        } catch (error) {
-            console.error('Fehler beim Laden der Qualifikationen:', error);
-        }
-    }
-
-    get qualifications() {
-        return this.employeeForm.get('qualifications') as FormArray;
-    }
+  private loadQualifications(id: string): void {
+    const numericId = Number(id);
+    this.qualificationService.getQualificationsByEmployeeId(numericId).subscribe({
+      next: (qualifications) => {
+        const skillsArray = this.fb.array(
+          qualifications.map(skill => this.fb.group({id: skill.id, skill: skill.skill}))
+        );
+        this.employeeForm.setControl('qualifications', skillsArray);
+      },
+      error: (error) => {
+        console.error('Fehler beim Laden der Qualifikationen:', error);
+      }
+    });
+  }
 
   addSkill() {
     const newSkillValue = this.employeeForm.get('newSkill')?.value.trim();
@@ -101,7 +100,7 @@ export class EmployeeEditViewComponent implements OnInit {
 
     if (deletedSkillIndex !== -1) {
       const restoredSkill = this.deletedSkills[deletedSkillIndex];
-      this.qualifications.push(this.fb.group({ id: restoredSkill.id, skill: restoredSkill.skill }));
+      this.qualifications.push(this.fb.group({id: restoredSkill.id, skill: restoredSkill.skill}));
       this.deletedSkills.splice(deletedSkillIndex, 1);
     } else {
       this.checkIfQualificationExists(newSkillValue);
@@ -111,103 +110,104 @@ export class EmployeeEditViewComponent implements OnInit {
   }
 
   private async checkIfQualificationExists(skill: string): Promise<void> {
-        try {
-            const qualifications = await firstValueFrom(this.http
-                .get<any[]>(`http://localhost:8089/qualifications`, {headers: this.headers})
-            );
+    try {
+      const qualifications = await firstValueFrom(this.qualificationService.getQualifications());
+      const existingQualification = qualifications.find(q => q.skill.toLowerCase() === skill.toLowerCase());
 
-            const existingQualification = qualifications.find(q => q.skill.toLowerCase() === skill.toLowerCase());
+      if (existingQualification) {
+        await this.addExistingQualificationToEmployee(existingQualification.id, existingQualification.skill);
+      } else {
+        await this.addQualificationToEmployee(skill);
+      }
+    } catch (error) {
+      alert('Fehler beim Abrufen der Qualifikationen. Bitte versuchen Sie es später erneut.');
+    } finally {
+      this.employeeForm.get('newSkill')?.setValue('');
+    }
+  }
 
-            if (existingQualification) {
-                await this.addExistingQualificationToEmployee(existingQualification.id, existingQualification.skill);
-            } else {
-                await this.addQualificationToEmployee(skill);
-            }
-        } catch (error) {
-            alert('Fehler beim Abrufen der Qualifikationen. Bitte versuchen Sie es später erneut.');
-        } finally {
-            this.employeeForm.get('newSkill')?.setValue('');
-        }
+  private async addExistingQualificationToEmployee(qualificationId: number, skill: string): Promise<void> {
+    try {
+      const qualificationToAdd = {id: qualificationId, skill};
+      await firstValueFrom(this.http
+        .post<any>(`http://localhost:8089/employees/${this.employeeId}/qualifications`, qualificationToAdd, {headers: this.headers})
+      );
+
+      const newSkillFormGroup = this.fb.group({id: qualificationId, skill});
+      this.qualifications.push(newSkillFormGroup);
+    } catch (error) {
+      alert('Fehler beim Hinzufügen der Qualifikation. Der Mitarbeiter besitzt bereits diese Qualifikation.');
+    } finally {
+      this.employeeForm.get('newSkill')?.setValue('');
+    }
+  }
+
+  private async addQualificationToEmployee(skill: string): Promise<void> {
+    if (this.qualifications.controls.some(control => control.value.skill === skill)) {
+      alert('Diese Qualifikation ist bereits vorhanden.');
+      return;
     }
 
-    private async addExistingQualificationToEmployee(qualificationId: number, skill: string): Promise<void> {
-        try {
-            const qualificationToAdd = {id: qualificationId, skill};
-            await firstValueFrom(this.http
-                .post<any>(`http://localhost:8089/employees/${this.employeeId}/qualifications`, qualificationToAdd, {headers: this.headers})
-            );
+    try {
+      const response = await firstValueFrom(this.http
+        .post<any>(`http://localhost:8089/qualifications`, {skill: skill.trim()}, {headers: this.headers})
+      );
 
-            const newSkillFormGroup = this.fb.group({id: qualificationId, skill});
-            this.qualifications.push(newSkillFormGroup);
-        } catch (error) {
-            alert('Fehler beim Hinzufügen der Qualifikation. Der Mitarbeiter besitzt bereits diese Qualifikation.');
-        } finally {
-            this.employeeForm.get('newSkill')?.setValue('');
-        }
+      const qualificationToAdd = {id: response.id, skill: response.skill};
+
+      await firstValueFrom(this.http
+        .post<any>(`http://localhost:8089/employees/${this.employeeId}/qualifications`, qualificationToAdd, {headers: this.headers})
+      );
+
+      const newSkillFormGroup = this.fb.group({id: response.id, skill});
+      this.qualifications.push(newSkillFormGroup);
+    } catch (error) {
+      alert('Fehler beim Erstellen der Qualifikation. Der Mitarbeiter hat bereits die Qualifikation.');
+    } finally {
+      this.employeeForm.get('newSkill')?.setValue('');
     }
+  }
 
-    private async addQualificationToEmployee(skill: string): Promise<void> {
-        if (this.qualifications.controls.some(control => control.value.skill === skill)) {
-            alert('Diese Qualifikation ist bereits vorhanden.');
-            return;
-        }
+  deleteQualification(skill: string): void {
+    const skillControl = this.qualifications.controls.find(control => control.value.skill === skill);
+    if (!skillControl) return;
 
-        try {
-            const response = await firstValueFrom(this.http
-                .post<any>(`http://localhost:8089/qualifications`, {skill: skill.trim()}, {headers: this.headers})
-            );
+    this.deletedSkills.push(skillControl.value);
 
-            const qualificationToAdd = {id: response.id, skill: response.skill};
-
-            await firstValueFrom(this.http
-                .post<any>(`http://localhost:8089/employees/${this.employeeId}/qualifications`, qualificationToAdd, {headers: this.headers})
-            );
-
-            const newSkillFormGroup = this.fb.group({id: response.id, skill});
-            this.qualifications.push(newSkillFormGroup);
-        } catch (error) {
-            alert('Fehler beim Erstellen der Qualifikation. Der Mitarbeiter hat bereits die Qualifikation.');
-        } finally {
-            this.employeeForm.get('newSkill')?.setValue('');
-        }
+    const skillIndex = this.qualifications.controls.findIndex(control => control.value.skill === skill);
+    if (skillIndex !== -1) {
+      this.qualifications.removeAt(skillIndex);
     }
+  }
 
-    deleteQualification(skill: string): void {
+  async save(): Promise<void> {
+    const skillSet = this.qualifications.controls.map(control => control.value.id);
+    const updatedEmployee = {...this.employeeForm.value, skillSet};
+
+    try {
+      for (const skill of this.deletedSkills) {
         const skillControl = this.qualifications.controls.find(control => control.value.skill === skill);
-        if (!skillControl) return;
-
-        this.deletedSkills.push(skillControl.value);
-
-        const skillIndex = this.qualifications.controls.findIndex(control => control.value.skill === skill);
-        if (skillIndex !== -1) {
-            this.qualifications.removeAt(skillIndex);
+        if (skillControl) {
+          await firstValueFrom(this.http
+            .delete(`http://localhost:8089/employees/${this.employeeId}/qualifications/${skillControl.value.id}`, {headers: this.headers})
+          );
         }
+      }
+
+      await firstValueFrom(this.http
+        .put<any>(`http://localhost:8089/employees/${this.employeeId}`, updatedEmployee, {headers: this.headers})
+      );
+      this.router.navigate(['/employees']);
+    } catch (error) {
+      console.error('Fehler beim Speichern des Mitarbeiters:', error);
     }
+  }
 
-    async save(): Promise<void> {
-        const skillSet = this.qualifications.controls.map(control => control.value.id);
-        const updatedEmployee = {...this.employeeForm.value, skillSet};
+  cancel() {
+    this.router.navigate(['/employees']);
+  }
 
-        try {
-            for (const skill of this.deletedSkills) {
-                const skillControl = this.qualifications.controls.find(control => control.value.skill === skill);
-                if (skillControl) {
-                    await firstValueFrom(this.http
-                        .delete(`http://localhost:8089/employees/${this.employeeId}/qualifications/${skillControl.value.id}`, {headers: this.headers})
-                    );
-                }
-            }
-
-            await firstValueFrom(this.http
-                .put<any>(`http://localhost:8089/employees/${this.employeeId}`, updatedEmployee, {headers: this.headers})
-            );
-            this.router.navigate(['/employees']);
-        } catch (error) {
-            console.error('Fehler beim Speichern des Mitarbeiters:', error);
-        }
-    }
-
-    cancel() {
-        this.router.navigate(['/employees']);
-    }
+  private get headers(): HttpHeaders {
+    return new HttpHeaders().set('Authorization', `Bearer ${this.bearer}`);
+  }
 }
