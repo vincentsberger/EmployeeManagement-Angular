@@ -9,6 +9,7 @@ import {CommonModule} from "@angular/common";
 import {MatIconModule} from "@angular/material/icon";
 import {EmployeeService} from "../../service/employee.service";
 import {QualificationService} from "../../service/qualification.service";
+import {MessageService} from "../../service/message.service";
 
 @Component({
   selector: 'app-employee-edit',
@@ -36,7 +37,8 @@ export class EmployeeEditViewComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private employeeService: EmployeeService,
-    private qualificationService: QualificationService
+    private qualificationService: QualificationService,
+    private messageService: MessageService
   ) {
     this.employeeForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -69,10 +71,11 @@ export class EmployeeEditViewComponent implements OnInit {
         this.employeeForm.patchValue(employee);
       },
       error: (error) => {
-        console.error('Fehler beim Laden der Mitarbeiterdaten:', error);
+        this.messageService.showError('Fehler beim Laden der Mitarbeiterdaten. Bitte versuchen Sie es erneut.', 'Ladefehler');
       }
     });
   }
+
 
   private loadQualifications(id: string): void {
     const numericId = Number(id);
@@ -84,7 +87,7 @@ export class EmployeeEditViewComponent implements OnInit {
         this.employeeForm.setControl('qualifications', skillsArray);
       },
       error: (error) => {
-        console.error('Fehler beim Laden der Qualifikationen:', error);
+        this.messageService.showError('Fehler beim Laden der Qualifikationen. Bitte versuchen Sie es erneut.', 'Ladefehler');
       }
     });
   }
@@ -92,7 +95,7 @@ export class EmployeeEditViewComponent implements OnInit {
   addSkill() {
     const newSkillValue = this.employeeForm.get('newSkill')?.value.trim();
     if (!newSkillValue) {
-      alert('Der Name der Qualifikation darf nicht leer sein.');
+      this.messageService.showError('Der Name der Qualifikation darf nicht leer sein.', 'Fehler');
       return;
     }
 
@@ -120,7 +123,7 @@ export class EmployeeEditViewComponent implements OnInit {
         await this.addQualificationToEmployee(skill);
       }
     } catch (error) {
-      alert('Fehler beim Abrufen der Qualifikationen. Bitte versuchen Sie es später erneut.');
+      this.messageService.showError('Fehler beim Laden der Qualifikationen. Bitte versuchen Sie es erneut.', 'Fehler');
     } finally {
       this.employeeForm.get('newSkill')?.setValue('');
     }
@@ -128,41 +131,50 @@ export class EmployeeEditViewComponent implements OnInit {
 
   private async addExistingQualificationToEmployee(qualificationId: number, skill: string): Promise<void> {
     try {
-      const qualificationToAdd = {id: qualificationId, skill};
-      await firstValueFrom(this.http
-        .post<any>(`http://localhost:8089/employees/${this.employeeId}/qualifications`, qualificationToAdd, {headers: this.headers})
-      );
+      const qualificationToAdd = { id: qualificationId, skill };
+      await firstValueFrom(this.http.post<any>(
+        `http://localhost:8089/employees/${this.employeeId}/qualifications`,
+        qualificationToAdd,
+        { headers: this.headers }
+      ));
 
-      const newSkillFormGroup = this.fb.group({id: qualificationId, skill});
+      const newSkillFormGroup = this.fb.group({ id: qualificationId, skill });
       this.qualifications.push(newSkillFormGroup);
+      this.messageService.showSuccess(`Qualifikation "${skill}" erfolgreich hinzugefügt.`, 'Erfolg');
     } catch (error) {
-      alert('Fehler beim Hinzufügen der Qualifikation. Der Mitarbeiter besitzt bereits diese Qualifikation.');
+      this.messageService.showError('Der Mitarbeiter besitzt bereits diese Qualifikation.', 'Fehler');
     } finally {
       this.employeeForm.get('newSkill')?.setValue('');
     }
   }
 
+
   private async addQualificationToEmployee(skill: string): Promise<void> {
     if (this.qualifications.controls.some(control => control.value.skill === skill)) {
-      alert('Diese Qualifikation ist bereits vorhanden.');
+      this.messageService.showError('Diese Qualifikation ist bereits vorhanden.', 'Fehler');
       return;
     }
 
     try {
-      const response = await firstValueFrom(this.http
-        .post<any>(`http://localhost:8089/qualifications`, {skill: skill.trim()}, {headers: this.headers})
-      );
+      const response = await firstValueFrom(this.http.post<any>(
+        `http://localhost:8089/qualifications`,
+        { skill: skill.trim() },
+        { headers: this.headers }
+      ));
 
-      const qualificationToAdd = {id: response.id, skill: response.skill};
+      const qualificationToAdd = { id: response.id, skill: response.skill };
 
-      await firstValueFrom(this.http
-        .post<any>(`http://localhost:8089/employees/${this.employeeId}/qualifications`, qualificationToAdd, {headers: this.headers})
-      );
+      await firstValueFrom(this.http.post<any>(
+        `http://localhost:8089/employees/${this.employeeId}/qualifications`,
+        qualificationToAdd,
+        { headers: this.headers }
+      ));
 
-      const newSkillFormGroup = this.fb.group({id: response.id, skill});
+      const newSkillFormGroup = this.fb.group({ id: response.id, skill });
       this.qualifications.push(newSkillFormGroup);
+      this.messageService.showSuccess(`Qualifikation "${skill}" erfolgreich erstellt und hinzugefügt.`, 'Erfolg');
     } catch (error) {
-      alert('Fehler beim Erstellen der Qualifikation. Der Mitarbeiter hat bereits die Qualifikation.');
+      this.messageService.showError('Fehler beim Erstellen der Qualifikation. Der Mitarbeiter hat möglicherweise bereits diese Qualifikation.', 'Fehler');
     } finally {
       this.employeeForm.get('newSkill')?.setValue('');
     }
@@ -182,24 +194,28 @@ export class EmployeeEditViewComponent implements OnInit {
 
   async save(): Promise<void> {
     const skillSet = this.qualifications.controls.map(control => control.value.id);
-    const updatedEmployee = {...this.employeeForm.value, skillSet};
+    const updatedEmployee = { ...this.employeeForm.value, skillSet };
 
     try {
       for (const skill of this.deletedSkills) {
         const skillControl = this.qualifications.controls.find(control => control.value.skill === skill);
         if (skillControl) {
-          await firstValueFrom(this.http
-            .delete(`http://localhost:8089/employees/${this.employeeId}/qualifications/${skillControl.value.id}`, {headers: this.headers})
-          );
+          await firstValueFrom(this.http.delete(
+            `http://localhost:8089/employees/${this.employeeId}/qualifications/${skillControl.value.id}`,
+            { headers: this.headers }
+          ));
         }
       }
 
-      await firstValueFrom(this.http
-        .put<any>(`http://localhost:8089/employees/${this.employeeId}`, updatedEmployee, {headers: this.headers})
-      );
+      await firstValueFrom(this.http.put<any>(
+        `http://localhost:8089/employees/${this.employeeId}`,
+        updatedEmployee,
+        { headers: this.headers }
+      ));
+      this.messageService.showSuccess('Mitarbeiterdaten von wurden erfolgreich gespeichert.', 'Erfolg');
       this.router.navigate(['/employees']);
     } catch (error) {
-      console.error('Fehler beim Speichern des Mitarbeiters:', error);
+      this.messageService.showError('Fehler beim Speichern des Mitarbeiters. Bitte versuchen Sie es erneut.', 'Speicherfehler');
     }
   }
 
