@@ -43,9 +43,7 @@ export class ApiService {
   public sendGetRequest<T>(apiPath: string): Observable<T> {
     return this.httpClient
       .get<T>(ApiRoutes.BASE_URL + apiPath, {
-        headers: new HttpHeaders()
-          .set('Content-Type', 'application/json')
-          .set('Authorization', `Bearer ${this.bearer}`),
+        headers: this.getRequestHeaders(),
       })
       .pipe(
         retry({
@@ -53,7 +51,7 @@ export class ApiService {
           delay: 100,
         }),
         catchError<T, Observable<T>>(
-          this.errorHandlerService.handleError<T>("getRequest", undefined)
+          this.errorHandlerService.handleError<T>('getRequest', undefined)
         )
       );
   }
@@ -66,15 +64,10 @@ export class ApiService {
    * @param postBody - The JSON payload to send in the request body.
    * @returns An observable of the HTTP response with the specified type.
    */
-  public sendPostRequest<T>(
-    apiPath: string,
-    postBody: any
-  ): Observable<T> {
+  public sendPostRequest<T>(apiPath: string, postBody: any): Observable<T> {
     return this.httpClient
       .post<T>(ApiRoutes.BASE_URL + apiPath, postBody, {
-        headers: new HttpHeaders()
-          .set('Content-Type', 'application/json')
-          .set('Authorization', `Bearer ${this.bearer}`),
+        headers: this.getRequestHeaders(),
       })
       .pipe(
         retry({
@@ -82,7 +75,7 @@ export class ApiService {
           delay: 100,
         }),
         catchError<T, Observable<T>>(
-          this.errorHandlerService.handleError<T>("postRequest", undefined)
+          this.errorHandlerService.handleError<T>('postRequest', undefined)
         )
       );
   }
@@ -94,12 +87,21 @@ export class ApiService {
    * @example `/employees/1`, `/qualifications/1/employees`
    * @returns the response of the API
    */
-  public sendPutRequest<T>(apiPath: string): Observable<T | never[]> {
-    return this.httpClient.put<T>(ApiRoutes.BASE_URL + apiPath, {
-      headers: new HttpHeaders()
-        .set('Content-Type', 'application/json')
-        .set('Authorization', `Bearer ${this.bearer}`),
-    });
+  public sendPutRequest<T>(apiPath: string, putBody: any): Observable<T> {
+    return this.httpClient
+      .put<T>(ApiRoutes.BASE_URL + apiPath, {
+        headers: this.getRequestHeaders(),
+        body: putBody,
+      })
+      .pipe(
+        retry({
+          count: 3,
+          delay: 100,
+        }),
+        catchError<T, Observable<T>>(
+          this.errorHandlerService.handleError<T>('deleteRequest', undefined)
+        )
+      );
   }
 
   /**
@@ -112,9 +114,7 @@ export class ApiService {
   public sendDeleteRequest<T>(apiPath: string): Observable<T> {
     return this.httpClient
       .delete<T>(ApiRoutes.BASE_URL + apiPath, {
-        headers: new HttpHeaders()
-          .set('Content-Type', 'application/json')
-          .set('Authorization', `Bearer ${this.bearer}`),
+        headers: this.getRequestHeaders(),
       })
       .pipe(
         retry({
@@ -122,7 +122,7 @@ export class ApiService {
           delay: 100,
         }),
         catchError<T, Observable<T>>(
-          this.errorHandlerService.handleError<T>("deleteRequest", undefined)
+          this.errorHandlerService.handleError<T>('deleteRequest', undefined)
         )
       );
   }

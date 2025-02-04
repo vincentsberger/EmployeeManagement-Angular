@@ -7,6 +7,7 @@ import { PostEmployeeDTO } from '../model/DTO/post-employee-dto';
 import { ApiService } from './api.service';
 import { ApiRoutes } from '../enums/api-routes';
 import { LoggingService } from './logging.service';
+import { AddQualificationToEmployeeDTO } from '../model/DTO/add-qualification-to-employee-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -52,7 +53,7 @@ export class EmployeeService {
    * @param employeeId - The ID of the employee to retrieve.
    * @returns An observable of the retrieved employee.
    */
-  public getEmployeeById(employeeId: number|string): Observable<Employee> {
+  public getEmployeeById(employeeId: number | string): Observable<Employee> {
     return this.apiService.sendGetRequest<Employee>(
       `${ApiRoutes.EMPLOYEES}/${employeeId}`
     );
@@ -110,7 +111,21 @@ export class EmployeeService {
   }
 
   // PUT
-  public updateEmployee(employee: Employee) {}
+  public updateEmployee(
+    employeeData: PostEmployeeDTO,
+    employee: Employee
+  ): Observable<Employee> {
+    return this.apiService
+      .sendPutRequest<Employee>(
+        `${ApiRoutes.EMPLOYEES}/${employee.id}`,
+        employeeData
+      )
+      .pipe(
+        tap(() => {
+          this.logger$.debug('Mitarbeiter aktualisiert', { employee });
+        })
+      );
+  }
 
   /**
    * Deletes a single employee from the database.
@@ -125,6 +140,36 @@ export class EmployeeService {
         tap((): void => {
           this.logger$.debug('Mitarbeiter gelöscht', employee);
         })
+      );
+  }
+
+  /**
+   * Adds a qualification to a specific employee.
+   *
+   * This method sends a POST request to the backend to add a
+   * qualification to an employee. The response is expected to be an
+   * `Employee` object, which is then logged to the console.
+   *
+   * @param qualification - The qualification to add to the employee.
+   * @param employee - The employee to which to add the qualification.
+   * @returns An observable of the updated employee.
+   */
+  public addQualificationToEmployee(
+    qualification: Qualification,
+    employee: Employee
+  ): Observable<Employee> {
+    return this.apiService
+      .sendPostRequest<Employee>(
+        `${ApiRoutes.EMPLOYEES}/${employee.id}/${ApiRoutes.QUALIFICATIONS}`,
+        qualification
+      )
+      .pipe(
+        tap((employee: Employee) =>
+          this.logger$.debug(`Qualifikation zum Mitarbeiter hinzugefügt.`, {
+            qualification,
+            employee,
+          })
+        )
       );
   }
 

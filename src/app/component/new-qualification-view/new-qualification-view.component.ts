@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -19,15 +19,22 @@ import { map } from 'rxjs';
   templateUrl: './new-qualification-view.component.html',
   styleUrl: './new-qualification-view.component.css',
 })
-export class NewQualificationViewComponent {
+export class NewQualificationViewComponent implements AfterViewInit {
   qualificationName: string = '';
 
   constructor(
     private qualificationService: QualificationService,
     private messageService: MessageService,
     private apiService: ApiService,
-    private drawerService: DrawerService
-  ) {}
+    private drawerService: DrawerService,
+    private renderer: Renderer2
+  ) {
+
+  }
+
+  ngAfterViewInit() {
+    this.renderer.selectRootElement('#qualificationName').focus();
+  }
 
   /**
    * Saves the new qualification by sending a POST request to the backend.

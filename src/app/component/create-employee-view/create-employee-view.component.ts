@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, Renderer2 } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -47,21 +47,19 @@ import { PostQualificationDTO } from '../../model/DTO/post-qualification-dto';
   templateUrl: './create-employee-view.component.html',
   styleUrl: './create-employee-view.component.scss',
 })
-
-export class CreateEmployeeViewComponent {
+export class CreateEmployeeViewComponent implements AfterViewInit {
   isLoading: boolean = false;
   newEmployeeForm: FormGroup;
   qualifications$: Observable<Qualification[]>;
 
   selectedItems: number[] = [];
 
-
-
   constructor(
     private employeeService: EmployeeService,
     private qualificationService: QualificationService,
     private messageService: MessageService,
-    private drawerService: DrawerService
+    private drawerService: DrawerService,
+    private renderer: Renderer2
   ) {
     this.qualifications$ = this.qualificationService.getQualifications();
 
@@ -73,11 +71,17 @@ export class CreateEmployeeViewComponent {
         Validators.required,
         Validators.pattern('^[0-9]{5}$'),
       ]),
-      city: new FormControl<string>('', [Validators.required,]),
+      city: new FormControl<string>('', [Validators.required]),
       phone: new FormControl<string>('', [Validators.required]),
       skillSet: new FormControl<number[]>([]),
       newSkill: new FormControl<string>('', Validators.maxLength(35)),
     });
+  }
+
+
+  ngAfterViewInit(): void {
+    this.renderer.selectRootElement('#firstName').focus();
+
   }
 
   /**
@@ -150,7 +154,9 @@ export class CreateEmployeeViewComponent {
   saveEmployee() {
     if (this.newEmployeeForm.valid) {
       // Retrieve form data
-      let formData: PostEmployeeDTO = this.prepareFormData(this.newEmployeeForm.value);
+      let formData: PostEmployeeDTO = this.prepareFormData(
+        this.newEmployeeForm.value
+      );
 
       let isExistingEmployee = false;
 

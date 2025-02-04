@@ -15,7 +15,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from '../modal/confirmation-modal/confirmation-modal.component';
 import { MessageService } from '../../service/message.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ModalService } from '../../service/modal.service';
 import { EmployeeEditViewComponent } from '../employee-edit-view/employee-edit-view.component';
 
 @Component({
@@ -51,7 +50,6 @@ export class EmployeeListComponent {
     private employeeService: EmployeeService,
     private drawerService: DrawerService,
     private messageService: MessageService,
-    private modalService: ModalService
   ) {
     this.employees$ = this.employeeService.getEmployees();
     this.filteredEmployees$ = this.employees$;
