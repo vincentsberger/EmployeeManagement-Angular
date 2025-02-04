@@ -7,7 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Qualification } from '../../model/Qualification';
-import { AsyncPipe, NgForOf } from '@angular/common';
+import { AsyncPipe, CommonModule, NgForOf } from '@angular/common';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import {
   MatOption,
@@ -42,6 +42,7 @@ import { PostQualificationDTO } from '../../model/DTO/post-qualification-dto';
     MatIconModule,
     FormsModule,
     AsyncPipe,
+    CommonModule,
   ],
   templateUrl: './create-employee-view.component.html',
   styleUrl: './create-employee-view.component.scss',
@@ -145,37 +146,46 @@ export class CreateEmployeeViewComponent {
   saveEmployee() {
     if (this.newEmployeeForm.valid) {
       // Retrieve form data
-      const formData: PostEmployeeDTO = this.newEmployeeForm.value;
+      let formData: PostEmployeeDTO = this.newEmployeeForm.value;
 
       let isExistingEmployee = false;
 
       // check if employee already exists
-      if (this.employeeService.isExistingEmployee(formData)) {
+      this.employeeService
+        .isExistingEmployee(formData)
+        .subscribe((isExisting: boolean): void => {
+          if (isExisting) {
+            isExistingEmployee = true;
+          } else {
+            isExistingEmployee = false;
+          }
+        });
+
+      if (isExistingEmployee) {
         this.messageService.showError(
           `Mitarbeiter "${
             formData.firstName + ' ' + formData.lastName
           }" existiert bereits!`,
           'Fehler beim Hinzufügen!'
         );
-        this.newEmployeeForm.reset();
-        // this.drawerService.close();
+        this.drawerService.close();
         return;
+      } else {
+        this.employeeService
+          .addEmployee(formData)
+          .subscribe((employee: Employee) => {
+            this.messageService.showSuccess(
+              `Mitarbeiter "${
+                employee.firstName + ' ' + employee.lastName
+              }" wurde erfolgreich hinzugefügt!`,
+              'Hinzufügen erfolgreich!'
+            );
+            this.employeeService.fetchEmployees();
+            this.drawerService.close();
+          });
+
+        this.newEmployeeForm.reset();
       }
-
-      this.employeeService
-        .addEmployee(formData)
-        .subscribe((employee: Employee) => {
-          this.messageService.showSuccess(
-            `Mitarbeiter "${
-              employee.firstName + ' ' + employee.lastName
-            }" wurde erfolgreich hinzugefügt!`,
-            'Hinzufügen erfolgreich!'
-          );
-          this.employeeService.fetchEmployees();
-          this.drawerService.close();
-        });
-
-      this.newEmployeeForm.reset();
     }
   }
 
