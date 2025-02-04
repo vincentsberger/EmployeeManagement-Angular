@@ -6,108 +6,55 @@
       <div class="row">
         <div class="col-md-6 mb-3">
           <label for="firstName" class="form-label">Vorname</label>
-          <input
-            id="firstName"
-            type="text"
-            class="form-control"
-            formControlName="firstName"
-            [ngClass]="{
-              'is-invalid':
-                employeeForm.get('firstName')?.invalid &&
-                employeeForm.get('firstName')?.touched
-            }"
-          />
-          <div
-            *ngIf="
-              employeeForm.get('firstName')?.invalid &&
-              employeeForm.get('firstName')?.touched
-            "
-            class="text-danger"
-          >
-            <div *ngIf="employeeForm.get('firstName')?.hasError('required')">
-              Vorname ist erforderlich.
-            </div>
+          <input id="firstName"
+                 type="text"
+                 class="form-control"
+                 formControlName="firstName"
+                 [ngClass]="{'is-invalid': employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched}"/>
+          <div *ngIf="employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched"
+               class="text-danger">
+            <div *ngIf="employeeForm.get('firstName')?.hasError('required')">Vorname ist erforderlich.</div>
           </div>
         </div>
         <div class="col-md-6 mb-3">
           <label for="lastName" class="form-label">Nachname</label>
-          <input
-            id="lastName"
-            type="text"
-            class="form-control"
-            formControlName="lastName"
-            [ngClass]="{
-              'is-invalid':
-                employeeForm.get('lastName')?.invalid &&
-                employeeForm.get('lastName')?.touched
-            }"
-          />
-          <div
-            *ngIf="
-              employeeForm.get('lastName')?.invalid &&
-              employeeForm.get('lastName')?.touched
-            "
-            class="text-danger"
-          >
-            <div *ngIf="employeeForm.get('lastName')?.hasError('required')">
-              Nachname ist erforderlich.
-            </div>
+          <input id="lastName"
+                 type="text"
+                 class="form-control"
+                 formControlName="lastName"
+                 [ngClass]="{'is-invalid': employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched}"/>
+          <div *ngIf="employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched"
+               class="text-danger">
+            <div *ngIf="employeeForm.get('lastName')?.hasError('required')">Nachname ist erforderlich.</div>
           </div>
         </div>
         <div class="col-md-6 mb-3">
           <label for="phone" class="form-label">Telefon</label>
-          <input
-            id="phone"
-            type="text"
-            class="form-control"
-            formControlName="phone"
-          />
+          <input id="phone" type="text" class="form-control" formControlName="phone"/>
         </div>
         <div class="col-md-6 mb-3">
           <label for="street" class="form-label">Straße und Hausnummer</label>
-          <input
-            id="street"
-            type="text"
-            class="form-control"
-            formControlName="street"
-          />
+          <input id="street" type="text" class="form-control" formControlName="street"/>
         </div>
         <div class="col-md-6 mb-3">
           <label for="postcode" class="form-label">Postleitzahl</label>
-          <input
-            id="postcode"
-            type="text"
-            class="form-control"
-            formControlName="postcode"
-            [ngClass]="{
-              'is-invalid':
-                employeeForm.get('postcode')?.invalid &&
-                employeeForm.get('postcode')?.touched
-            }"
-          />
-          <div
-            *ngIf="
-              employeeForm.get('postcode')?.invalid &&
-              employeeForm.get('postcode')?.touched
-            "
-            class="text-danger"
-          >
-            <div *ngIf="employeeForm.get('postcode')?.hasError('required')">
-              Postleitzahl ist erforderlich.
+          <input id="postcode"
+                 type="text"
+                 class="form-control"
+                 formControlName="postcode"
+                 [ngClass]="{'is-invalid': employeeForm.get('postcode')?.invalid && employeeForm.get('postcode')?.touched}"/>
+          <div *ngIf="employeeForm.get('postcode')?.invalid && employeeForm.get('postcode')?.touched"
+               class="text-danger">
+            <div *ngIf="employeeForm.get('postcode')?.hasError('required')">Postleitzahl ist erforderlich.
             </div>
-            <div *ngIf="employeeForm.get('postcode')?.hasError('pattern')">
-              Die Postleitzahl muss eine 5-stellige Zahl sein.
+            <div *ngIf="employeeForm.get('postcode')?.hasError('pattern')">Die Postleitzahl muss eine
+              5-stellige Zahl sein.
             </div>
           </div>
         </div>
         <div class="col-md-6 mb-3">
           <label for="city" class="form-label">Stadt</label>
-          <input
-            id="city"
-            type="text"
-            class="form-control"
-            formControlName="city"
-          />
+          <input id="city" type="text" class="form-control" formControlName="city"/>
         </div>
       </div>
 
@@ -116,22 +63,19 @@
 
         <ul class="list-group mb-3">
           <li
-            *ngFor="
-              let qualification of currentEmployeeQualifications$ | async;
-              let i = index
-            "
+            *ngFor="let skill of qualifications.controls; let i = index"
             class="list-group-item d-flex justify-content-between align-items-center"
           >
-            {{ qualification.skill }}
+            {{ skill.value.skill }}
             <button
               class="btn btn-link text-danger"
-              (click)="deleteQualificationFromEmployee(qualification)"
+              (click)="deleteQualification(skill.value.skill)"
             >
               <mat-icon>delete</mat-icon>
             </button>
           </li>
         </ul>
-<hr>
+
         <div class="input-group">
           <input
             type="text"
@@ -143,25 +87,19 @@
           <button
             class="btn btn-primary ms-2"
             type="button"
-            (click)="
-              addQualificationToEmployee(employeeForm.get('newSkill')?.value)
-            "
+            (click)="addSkill()"
           >
             Hinzufügen
           </button>
         </div>
       </div>
-<hr>
+
       <div class="d-flex justify-content-end mt-4">
-        <button class="btn btn-secondary me-2" type="button" (click)="cancel()">
-          Abbrechen
-        </button>
-        <button
-          class="btn btn-primary"
-          type="button"
-          (click)="saveEmployee()"
-          [disabled]="employeeForm.invalid"
-        >
+        <button class="btn btn-secondary me-2" type="button" (click)="cancel()">Abbrechen</button>
+        <button class="btn btn-primary"
+                type="button"
+                (click)="save()"
+                [disabled]="employeeForm.invalid">
           Speichern
         </button>
       </div>
