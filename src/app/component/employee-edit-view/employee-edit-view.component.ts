@@ -129,6 +129,7 @@ export class EmployeeEditViewComponent implements OnInit {
     }
   }
 
+  // Wir hatten keine Zeit mehr, dass optimiert auszulagern
   private async addExistingQualificationToEmployee(qualificationId: number, skill: string): Promise<void> {
     try {
       const qualificationToAdd = { id: qualificationId, skill };
@@ -148,7 +149,7 @@ export class EmployeeEditViewComponent implements OnInit {
     }
   }
 
-
+  // Wir hatten keine Zeit mehr, dass optimiert auszulagern
   private async addQualificationToEmployee(skill: string): Promise<void> {
     if (this.qualifications.controls.some(control => control.value.skill === skill)) {
       this.messageService.showError('Diese Qualifikation ist bereits vorhanden.', 'Fehler');
@@ -192,6 +193,7 @@ export class EmployeeEditViewComponent implements OnInit {
     }
   }
 
+  // Wir hatten keine Zeit mehr, dass optimiert auszulagern
   async save(): Promise<void> {
     const skillSet = this.qualifications.controls.map(control => control.value.id);
     const updatedEmployee = { ...this.employeeForm.value, skillSet };

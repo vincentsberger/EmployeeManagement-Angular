@@ -147,13 +147,11 @@ export class QualificationService {
   public deleteQualification(
     qualification: Qualification
   ): Observable<Qualification> {
-    // Schritt 1: Überprüfen, ob die Qualifikation Mitarbeitern zugeordnet ist
     return this.employeeService
       .getEmployeesByQualificationId(qualification.id)
       .pipe(
         switchMap((employees: Employee[]): Observable<Qualification> => {
           if (employees.length === 0) {
-            // Keine zugeordneten Mitarbeiter → Direkt löschen
             return this.apiService
               .sendDeleteRequest<Qualification>(
                 `${ApiRoutes.QUALIFICATIONS}/${qualification.id}`
@@ -167,7 +165,6 @@ export class QualificationService {
                 )
               );
           } else {
-            // Mitarbeiter-Qualifikationen zuerst entfernen
             const deleteRequests = employees.map(
               (employee): Observable<Employee> =>
                 this.employeeService.removeQualificationFromEmployee(
@@ -175,7 +172,6 @@ export class QualificationService {
                   employee
                 )
             );
-            // Schritt 2: Nachdem alle Mitarbeiter aktualisiert wurden → Qualifikation löschen
             return forkJoin(deleteRequests).pipe(
               switchMap(
                 (): Observable<Qualification> =>

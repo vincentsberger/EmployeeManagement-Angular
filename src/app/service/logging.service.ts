@@ -34,7 +34,6 @@ export class LoggingService {
    * @param data Optional data to be logged.
    */
   error(errorMessage: string, data?: any): void {
-    // Hier könnte man z. B. Fehler an ein externes Monitoring-Tool senden
     console.error('LoggingService[Error]:\n', errorMessage, data);
   }
 
@@ -47,7 +46,6 @@ export class LoggingService {
    * @param data Optional data to be logged.
    */
   warning(errorMessage: string, data?: any): void {
-    // Hier könnte man z. B. Fehler an ein externes Monitoring-Tool senden
     console.warn('LoggingService[Warning]:\n', errorMessage, data);
   }
 }

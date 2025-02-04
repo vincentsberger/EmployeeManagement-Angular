@@ -22,18 +22,6 @@ const isAccessAllowed = async (
 ): Promise<boolean | UrlTree> => {
   const { authenticated, grantedRoles } = authData;
 
-  // const requiredRole = route.data['role'];
-  // if (!requiredRole) {
-  //   return false;
-  // }
-
-  // const hasRequiredRole = (role: string): boolean =>
-  //   Object.values(grantedRoles.resourceRoles).some((roles) => roles.includes(role));
-
-  // if (authenticated && hasRequiredRole(requiredRole)) {
-  //   return true;
-  // }
-
   const keycloak = inject(Keycloak);
   if (!keycloak.authenticated) {
     keycloak.login();

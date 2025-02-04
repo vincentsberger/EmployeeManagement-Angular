@@ -54,7 +54,7 @@ export class DrawerPanelComponent implements OnDestroy, AfterViewInit {
           if (this.container) {
             this.loadComponent(component, data);
           } else {
-            this.pendingComponent = { component, data }; // Warte, bis View init ist
+            this.pendingComponent = { component, data };
           }
         } else {
           this.clearComponent();
@@ -80,7 +80,7 @@ export class DrawerPanelComponent implements OnDestroy, AfterViewInit {
   }
 
   private loadComponent(component: Type<any>, data?: any) {
-    this.clearComponent(); // Vorherige Komponente entfernen
+    this.clearComponent();
     const componentRef = this.container.createComponent(component);
 
     if (data) {
@@ -93,6 +93,6 @@ export class DrawerPanelComponent implements OnDestroy, AfterViewInit {
   }
 
   close() {
-    this.drawerService.close(); // Schließen über Service, um Konsistenz zu wahren
+    this.drawerService.close();
   }
 }
