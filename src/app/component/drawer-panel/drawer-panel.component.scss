@@ -10,6 +10,7 @@
 
 .drawer-panel {
   position: fixed;
+  overflow-y: auto;
   top: 0;
   right: 0;
   width: 480px;
