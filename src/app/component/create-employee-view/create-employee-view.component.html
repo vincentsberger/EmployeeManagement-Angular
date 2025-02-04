@@ -9,6 +9,10 @@
             id="firstName"
             formControlName="firstName"
             type="text"
+            [ngClass]="{
+              'is-invalid': newEmployeeForm.get('firstName')?.invalid && newEmployeeForm.get('firstName')?.touched,
+              'is-valid': newEmployeeForm.get('firstName')?.valid
+            }"
           />
           <div
             *ngIf="
@@ -29,6 +33,10 @@
             id="lastName"
             formControlName="lastName"
             type="text"
+            [ngClass]="{
+              'is-invalid': newEmployeeForm.get('lastName')?.invalid && newEmployeeForm.get('lastName')?.touched,
+              'is-valid': newEmployeeForm.get('lastName')?.valid
+            }"
           />
           <div
             *ngIf="
@@ -49,6 +57,10 @@
             id="phone"
             formControlName="phone"
             type="text"
+            [ngClass]="{
+              'is-invalid': newEmployeeForm.get('phone')?.invalid && newEmployeeForm.get('phone')?.touched,
+              'is-valid': newEmployeeForm.get('phone')?.valid
+            }"
           />
         </div>
         <div class="mb-3">
@@ -58,6 +70,10 @@
             id="street"
             formControlName="street"
             type="text"
+            [ngClass]="{
+              'is-invalid': newEmployeeForm.get('street')?.invalid && newEmployeeForm.get('street')?.touched,
+              'is-valid': newEmployeeForm.get('street')?.valid
+            }"
           />
         </div>
         <div class="mb-3">
@@ -67,6 +83,10 @@
             id="postcode"
             formControlName="postcode"
             type="text"
+            [ngClass]="{
+              'is-invalid': newEmployeeForm.get('postcode')?.invalid && newEmployeeForm.get('postcode')?.touched,
+              'is-valid': newEmployeeForm.get('postcode')?.valid
+            }"
           />
           <div
             *ngIf="
@@ -90,6 +110,10 @@
             id="city"
             formControlName="city"
             type="text"
+            [ngClass]="{
+              'is-invalid': newEmployeeForm.get('city')?.invalid && newEmployeeForm.get('city')?.touched,
+              'is-valid': newEmployeeForm.get('city')?.valid
+            }"
           />
         </div>
       </div>

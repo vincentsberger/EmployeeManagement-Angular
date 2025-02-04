@@ -72,7 +72,7 @@ export class CreateEmployeeViewComponent {
       city: new FormControl<string>('', [Validators.required]),
       phone: new FormControl<string>('', [Validators.required]),
       skillSet: new FormControl<number[]>([]),
-      newSkill: new FormControl<string>(''),
+      newSkill: new FormControl<string>('', Validators.maxLength(35)),
     });
   }
 
