@@ -105,27 +105,38 @@
         </div>
       </div>
 
+      <div>
       <h5 class="container">Qualifikationen</h5>
       <div class="container">
         <mat-form-field appearance="fill">
           <mat-select
-            id="qualificationSelect"
-            name="qualificationSelect"
-            [(value)]="selectedItems"
-            multiple
-            placeholder="Qualifikationen"
-            (selectionChange)="onSelectionChange($event)"
+          id="qualificationSelect"
+          name="qualificationSelect"
+          [(value)]="selectedItems"
+          multiple
+          placeholder="Qualifikationen"
+          (selectionChange)="onSelectionChange($event)"
           >
-            <!-- Options -->
-            <mat-option
-              *ngFor="let qualification of qualifications$ | async"
-              value="{{ qualification.id }}"
+          <!-- Options -->
+          <mat-option
+          *ngFor="let qualification of qualifications$ | async"
+          value="{{ qualification.id }}"
             >
-              {{ qualification.skill }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+            {{ qualification.skill }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+        <div class="d-flex gap-2">
+          <input
+            type="text"
+            class="form-control flex-grow-1"
+            formControlName="newSkill"
+            placeholder="Eine neue Qualifikation hinzufügen"
+            (keydown.enter)="$event.preventDefault()"/>
+          <button class="btn btn-primary" type="button" (click)="addNewQualification()">Hinzufügen</button>
+        </div>
+    </div>
 
       <div class="container mt-3">
         <button

@@ -71,31 +71,55 @@ export class CreateEmployeeViewComponent {
       city: new FormControl<string>('', [Validators.required]),
       phone: new FormControl<string>('', [Validators.required]),
       skillSet: new FormControl<number[]>([]),
+      newSkill: new FormControl<string>(''),
     });
   }
 
-  public addNewQualification(skill: string) {
-    const newQualification: PostQualificationDTO = {
-      skill: skill.trim(),
+  /**
+   * Adds a new qualification by sending a POST request to the backend.
+   *
+   * Checks if a qualification with the same name already exists in the backend.
+   * If the qualification already exists, shows an error message and clears the input field.
+   * If the qualification does not exist already, sends a POST request to the backend with the new qualification information.
+   * The response is expected to be a `Qualification` object, which is then logged to the console.
+   * Finally, fetches the updated list of qualifications and clears the input field.
+   */
+  public addNewQualification() {
+    let isExistingQualification = false;
+
+    let newQualification: PostQualificationDTO = {
+      skill: this.newEmployeeForm.get('newSkill')?.value.trim(),
     } as PostQualificationDTO;
     this.qualificationService
       .isExistingQualification(newQualification)
       .subscribe((isExisting: boolean): void => {
         if (isExisting) {
-          this.messageService.showError(
-            'Qualifikation existiert bereits!',
-            'Fehler!'
-          );
-          this.newEmployeeForm.get('newSkill')?.reset();
+          isExistingQualification = true;
         } else {
-          this.qualificationService
-            .addQualification(newQualification)
-            .subscribe((qualification: Qualification) => {
-              this.qualificationService.fetchQualifications();
-            });
+          isExistingQualification = false;
         }
       });
-    const newSkillValue = this.newEmployeeForm.get('newSkill')?.value.trim();
+
+    if (isExistingQualification) {
+      this.messageService.showError(
+        `Qaulifikation "${newQualification.skill}" existiert bereits!`,
+        'Fehler beim Hinzufügen!'
+      );
+      this.newEmployeeForm.get('newSkill')?.setValue('');
+    } else {
+      this.qualificationService
+        .addQualification(newQualification)
+        .subscribe((newQualification: Qualification) => {
+          this.messageService.showSuccess(
+            `Qualifikation "${newQualification.skill}" erfolgreich hinzugefügt!`,
+            'Hinzufügen erfolgreich!'
+          );
+          this.qualificationService.fetchQualifications();
+          this.newEmployeeForm.get('newSkill')?.setValue('');
+          this.selectedItems.push(newQualification.id);
+          this.newEmployeeForm.patchValue({ skillSet: this.selectedItems });
+        });
+    }
   }
 
   /**
@@ -123,11 +147,10 @@ export class CreateEmployeeViewComponent {
       // Retrieve form data
       const formData: PostEmployeeDTO = this.newEmployeeForm.value;
 
-      // check if qualifcation already exists
-      const employeeAlreadyExists =
-        this.employeeService.isExistingEmployee(formData);
+      let isExistingEmployee = false;
 
-      if (employeeAlreadyExists) {
+      // check if employee already exists
+      if (this.employeeService.isExistingEmployee(formData)) {
         this.messageService.showError(
           `Mitarbeiter "${
             formData.firstName + ' ' + formData.lastName
